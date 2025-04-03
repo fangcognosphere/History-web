@@ -36,7 +36,7 @@ export default function TimelinePage() {
     if (periods.length > 0) {
       const items: TimelineItem[] = periods.map((period: any) => ({
         id: period.id,
-        name: period.TenTrieuDai,
+        name: period.TenTrieuDai, // Giữ nguyên tên thuộc tính trong DB
         startYear: period.BatDau,
         endYear: period.KetThuc,
         description: period.MoTa || 'Không có mô tả',

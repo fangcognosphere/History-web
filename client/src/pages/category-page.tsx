@@ -15,7 +15,7 @@ export default function CategoryPage() {
     switch(category) {
       case 'NhanVat': return 'Nhân Vật Lịch Sử';
       case 'SuKien': return 'Sự Kiện Lịch Sử';
-      case 'TrieuDai': return 'Triều Đại Lịch Sử';
+      case 'TrieuDai': return 'Thời Kỳ Lịch Sử';
       case 'all': return 'Tất Cả Bài Viết';
       default: return 'Danh Mục';
     }
@@ -50,7 +50,7 @@ export default function CategoryPage() {
           <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             {category === 'NhanVat' && 'Khám phá cuộc đời và sự nghiệp của những nhân vật đã để lại dấu ấn trong lịch sử Việt Nam.'}
             {category === 'SuKien' && 'Tìm hiểu về những sự kiện quan trọng đã định hình lịch sử và văn hóa của dân tộc Việt Nam.'}
-            {category === 'TrieuDai' && 'Hành trình qua các triều đại phong kiến đã tồn tại trong lịch sử Việt Nam từ thời Hùng Vương đến thời kỳ hiện đại.'}
+            {category === 'TrieuDai' && 'Hành trình qua các thời kỳ lịch sử đã tồn tại trong tiến trình phát triển của Việt Nam từ thời Hùng Vương đến thời kỳ hiện đại.'}
             {category === 'all' && 'Tổng hợp tất cả các bài viết về lịch sử, văn hóa và con người Việt Nam.'}
           </p>
         </header>

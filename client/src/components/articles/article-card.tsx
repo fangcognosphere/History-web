@@ -20,11 +20,11 @@ export function ArticleCard({ article }: ArticleCardProps) {
   const getCategoryInfo = (category: string) => {
     switch(category) {
       case 'NhanVat':
-        return { label: 'Nhân Vật', color: 'bg-primary-700' };
+        return { label: 'Nhân Vật', color: 'bg-red-600' };
       case 'SuKien':
-        return { label: 'Sự Kiện', color: 'bg-secondary-600' };
+        return { label: 'Sự Kiện', color: 'bg-orange-600' };
       case 'TrieuDai':
-        return { label: 'Thời kỳ', color: 'bg-blue-600' };
+        return { label: 'Thời Kỳ', color: 'bg-blue-600' };
       default:
         return { label: 'Khác', color: 'bg-gray-600' };
     }
@@ -46,13 +46,13 @@ export function ArticleCard({ article }: ArticleCardProps) {
   const getDefaultImage = (category: string) => {
     switch(category) {
       case 'NhanVat':
-        return 'https://images.unsplash.com/photo-1555921015-5532091f6026?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80';
+        return 'https://i.imgur.com/rJzIcT4.jpg'; // Hình ảnh về nhân vật lịch sử Việt Nam
       case 'SuKien':
-        return 'https://images.unsplash.com/photo-1622956386584-34ea7171d8d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80';
+        return 'https://i.imgur.com/9PU3gFl.jpg'; // Hình ảnh về sự kiện lịch sử Việt Nam
       case 'TrieuDai':
-        return 'https://images.unsplash.com/photo-1640006807976-a6127e9d6fa0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80';
+        return 'https://i.imgur.com/uDR7Rk7.jpg'; // Hình ảnh về các thời kỳ lịch sử Việt Nam
       default:
-        return `https://source.unsplash.com/random/800x600?sig=${article.id}`;
+        return 'https://i.imgur.com/JBYauhI.jpg'; // Hình ảnh lịch sử Việt Nam chung
     }
   };
 
@@ -71,20 +71,29 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <div className="p-6">
         <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
           <span>{formatDate(article.ngayDang)}</span>
+          {article.thoiGianDoc && article.thoiGianDoc > 0 && (
+            <>
+              <span className="mx-2">•</span>
+              <span>{article.thoiGianDoc} phút đọc</span>
+            </>
+          )}
         </div>
         <h3 className="font-serif font-bold text-xl mb-2">{article.tieuDe}</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
           {article.tomTat || 'Không có tóm tắt'}
         </p>
         <div className="flex justify-between items-center">
-          <Link href={`/article/${article.id}`} className="text-primary dark:text-primary font-medium hover:underline">
+          <Link href={`/article/${article.id}`} className="text-red-600 dark:text-red-400 font-medium hover:underline flex items-center">
             Đọc tiếp
+            <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </Link>
           <div className="flex space-x-2">
-            <button className="text-gray-400 hover:text-primary dark:hover:text-primary">
+            <button className="text-gray-400 hover:text-red-500 dark:hover:text-red-400">
               <i className="far fa-bookmark"></i>
             </button>
-            <button className="text-gray-400 hover:text-primary dark:hover:text-primary">
+            <button className="text-gray-400 hover:text-red-500 dark:hover:text-red-400">
               <i className="fas fa-share-alt"></i>
             </button>
           </div>
