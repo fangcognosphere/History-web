@@ -25,6 +25,9 @@ import AdminHistoricalFigureEdit from "@/pages/admin/admin-historical-figure-edi
 import AdminHistoricalEventEdit from "@/pages/admin/admin-historical-event-edit";
 import NotFound from "@/pages/not-found";
 
+// Import the new timeline page
+import TimelinePage from "@/pages/timeline-page";
+
 function Router() {
   return (
     <Switch>
@@ -32,6 +35,7 @@ function Router() {
       <Route path="/article/:id" component={ArticlePage} />
       <Route path="/category/:category" component={CategoryPage} />
       <Route path="/search" component={SearchPage} />
+      <Route path="/timeline" component={TimelinePage} />
       <Route path="/auth" component={AuthPage} />
       
       {/* Protected Admin Routes */}

@@ -14,20 +14,20 @@ export function FeaturedArticles() {
   });
 
   return (
-    <section id="featured" className="py-12 bg-gray-50 dark:bg-gray-900">
+    <section id="featured" className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold">Bài Viết Nổi Bật</h2>
+        <div className="flex justify-between items-center mb-10">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-800 dark:text-white">Bài Viết Nổi Bật</h2>
           <Link href="/category/all" className="text-primary dark:text-primary hover:underline font-medium">
             Xem tất cả
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading ? (
             Array(3).fill(0).map((_, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
-                <Skeleton className="h-48 w-full" />
+              <div key={index} className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                <Skeleton className="h-52 w-full" />
                 <div className="p-6 space-y-3">
                   <Skeleton className="h-6 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />

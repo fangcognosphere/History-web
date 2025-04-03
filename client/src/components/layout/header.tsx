@@ -39,9 +39,7 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">VN</span>
-              </div>
+              <img src="https://files.catbox.moe/1id9w3.png" alt="Logo" className="h-10 w-auto" />
               <h1 className="text-xl font-serif font-bold text-primary dark:text-primary">Lịch Sử Việt Nam</h1>
             </Link>
           </div>
@@ -58,7 +56,10 @@ export function Header() {
               Sự Kiện
             </Link>
             <Link href="/category/TrieuDai" className="font-medium hover:text-primary dark:hover:text-primary">
-              Triều Đại
+              Thời kỳ
+            </Link>
+            <Link href="/timeline" className="font-medium hover:text-primary dark:hover:text-primary">
+              Dòng thời gian
             </Link>
           </nav>
           
@@ -139,7 +140,10 @@ export function Header() {
               Sự Kiện
             </Link>
             <Link href="/category/TrieuDai" className="py-2 font-medium hover:text-primary dark:hover:text-primary">
-              Triều Đại
+              Thời kỳ
+            </Link>
+            <Link href="/timeline" className="py-2 font-medium hover:text-primary dark:hover:text-primary">
+              Dòng thời gian
             </Link>
             {user && (
               <>

@@ -8,9 +8,7 @@ export function Footer() {
           {/* About Site */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">VN</span>
-              </div>
+              <img src="https://files.catbox.moe/1id9w3.png" alt="Logo" className="h-10 w-auto" />
               <h3 className="text-xl font-serif font-bold text-white">Lịch Sử Việt Nam</h3>
             </div>
             <p className="mb-4 text-sm leading-relaxed">
@@ -40,7 +38,8 @@ export function Footer() {
               <li><Link href="/" className="hover:text-white transition-colors">Trang Chủ</Link></li>
               <li><Link href="/category/NhanVat" className="hover:text-white transition-colors">Nhân Vật Lịch Sử</Link></li>
               <li><Link href="/category/SuKien" className="hover:text-white transition-colors">Sự Kiện Lịch Sử</Link></li>
-              <li><Link href="/category/TrieuDai" className="hover:text-white transition-colors">Triều Đại</Link></li>
+              <li><Link href="/category/TrieuDai" className="hover:text-white transition-colors">Thời kỳ</Link></li>
+              <li><Link href="/timeline" className="hover:text-white transition-colors">Dòng thời gian</Link></li>
               <li><Link href="/admin" className="hover:text-white transition-colors">Quản Trị</Link></li>
             </ul>
           </div>

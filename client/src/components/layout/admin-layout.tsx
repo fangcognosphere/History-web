@@ -81,9 +81,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col`}>
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
-          <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center mr-2">
-            <span className="text-white font-bold">VN</span>
-          </div>
+          <img src="https://files.catbox.moe/1id9w3.png" alt="Logo" className="h-8 w-auto mr-2" />
           <h1 className="font-bold text-lg">Hệ thống quản trị</h1>
         </div>
         

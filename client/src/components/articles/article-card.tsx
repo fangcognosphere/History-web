@@ -24,7 +24,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       case 'SuKien':
         return { label: 'Sự Kiện', color: 'bg-secondary-600' };
       case 'TrieuDai':
-        return { label: 'Triều Đại', color: 'bg-blue-600' };
+        return { label: 'Thời kỳ', color: 'bg-blue-600' };
       default:
         return { label: 'Khác', color: 'bg-gray-600' };
     }
@@ -71,8 +71,6 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <div className="p-6">
         <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
           <span>{formatDate(article.ngayDang)}</span>
-          <span className="mx-2">•</span>
-          <span>{article.thoiGianDoc || 5} phút đọc</span>
         </div>
         <h3 className="font-serif font-bold text-xl mb-2">{article.tieuDe}</h3>
         <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
