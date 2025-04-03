@@ -3,28 +3,11 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+import { catboxUploader } from "./utils/catbox";
 
-// Setup multer storage
-const uploadsDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const storage_config = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  }
-});
-
+// Sử dụng bộ nhớ làm storage tạm thời để sau đó upload lên Catbox
 const upload = multer({ 
-  storage: storage_config,
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB limit
   },
@@ -34,19 +17,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication
   setupAuth(app);
 
-  // Serve uploads directory
-  app.use("/uploads", (req, res, next) => {
-    // Set cache headers for static files
-    res.setHeader("Cache-Control", "public, max-age=86400");
-    next();
-  }, (req, res, next) => {
-    const filePath = path.join(uploadsDir, req.path);
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        next();
-      }
-    });
-  });
+  // Không cần phục vụ uploads directory nữa vì đã chuyển sang dùng Catbox
 
   // Article endpoints
   app.get("/api/article", async (req, res) => {
@@ -119,7 +90,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let anhDaiDien = null;
       if (req.file) {
-        anhDaiDien = `/uploads/${req.file.filename}`;
+        // Upload hình ảnh lên Catbox thay vì lưu cục bộ
+        try {
+          anhDaiDien = await catboxUploader.uploadFromMulter(req.file);
+        } catch (uploadError) {
+          console.error("Upload to Catbox failed:", uploadError);
+          return res.status(500).json({ error: "Failed to upload image to Catbox" });
+        }
       }
 
       const newArticle = await storage.createBaiViet({
@@ -160,14 +137,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let anhDaiDien = article.anhDaiDien;
       if (req.file) {
-        anhDaiDien = `/uploads/${req.file.filename}`;
-        
-        // Delete old image if exists and is not the default
-        if (article.anhDaiDien && !article.anhDaiDien.includes("default")) {
-          const oldImagePath = path.join(uploadsDir, article.anhDaiDien.replace("/uploads/", ""));
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
+        // Upload hình ảnh lên Catbox
+        try {
+          anhDaiDien = await catboxUploader.uploadFromMulter(req.file);
+        } catch (uploadError) {
+          console.error("Upload to Catbox failed:", uploadError);
+          return res.status(500).json({ error: "Failed to upload image to Catbox" });
         }
       }
 
@@ -204,14 +179,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ error: "Unauthorized" });
       }
 
-      // Delete article image if exists
-      if (article.anhDaiDien && !article.anhDaiDien.includes("default")) {
-        const imagePath = path.join(uploadsDir, article.anhDaiDien.replace("/uploads/", ""));
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-        }
-      }
-
+      // Xóa bài viết từ cơ sở dữ liệu
+      // Lưu ý: Catbox không hỗ trợ xóa file trực tiếp mà không có user hash
       await storage.deleteBaiViet(id);
       res.status(204).send();
     } catch (error) {
@@ -237,7 +206,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const { tieuDe, moTa, baiVietId } = req.body;
-      const duongDan = `/uploads/${req.file.filename}`;
+      
+      // Upload hình ảnh lên Catbox
+      let duongDan;
+      try {
+        duongDan = await catboxUploader.uploadFromMulter(req.file);
+      } catch (uploadError) {
+        console.error("Upload to Catbox failed:", uploadError);
+        return res.status(500).json({ error: "Failed to upload image to Catbox" });
+      }
       
       const newImage = await storage.createHinhAnh({
         duongDan,
@@ -265,14 +242,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       let duongDan = image.duongDan;
       if (req.file) {
-        duongDan = `/uploads/${req.file.filename}`;
-        
-        // Delete old image
-        if (image.duongDan) {
-          const oldImagePath = path.join(uploadsDir, image.duongDan.replace("/uploads/", ""));
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
+        // Upload hình ảnh lên Catbox
+        try {
+          duongDan = await catboxUploader.uploadFromMulter(req.file);
+        } catch (uploadError) {
+          console.error("Upload to Catbox failed:", uploadError);
+          return res.status(500).json({ error: "Failed to upload image to Catbox" });
         }
       }
       
@@ -298,14 +273,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Image not found" });
       }
       
-      // Delete image file
-      if (image.duongDan) {
-        const imagePath = path.join(uploadsDir, image.duongDan.replace("/uploads/", ""));
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-        }
-      }
-      
+      // Xóa hình ảnh từ cơ sở dữ liệu
+      // Lưu ý: Catbox không hỗ trợ xóa file trực tiếp mà không có user hash
       await storage.deleteHinhAnh(id);
       res.status(204).send();
     } catch (error) {
@@ -330,7 +299,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       let videoPath = duongDan;
       if (req.file) {
-        videoPath = `/uploads/${req.file.filename}`;
+        // Upload video lên Catbox
+        try {
+          videoPath = await catboxUploader.uploadFromMulter(req.file);
+        } catch (uploadError) {
+          console.error("Upload to Catbox failed:", uploadError);
+          return res.status(500).json({ error: "Failed to upload video to Catbox" });
+        }
       }
       
       const newVideo = await storage.createVideo({
@@ -359,14 +334,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       let videoPath = duongDan || video.duongDan;
       if (req.file) {
-        videoPath = `/uploads/${req.file.filename}`;
-        
-        // Delete old video if it was a local file
-        if (video.duongDan && video.duongDan.startsWith('/uploads/')) {
-          const oldVideoPath = path.join(uploadsDir, video.duongDan.replace("/uploads/", ""));
-          if (fs.existsSync(oldVideoPath)) {
-            fs.unlinkSync(oldVideoPath);
-          }
+        // Upload video lên Catbox
+        try {
+          videoPath = await catboxUploader.uploadFromMulter(req.file);
+        } catch (uploadError) {
+          console.error("Upload to Catbox failed:", uploadError);
+          return res.status(500).json({ error: "Failed to upload video to Catbox" });
         }
       }
       
@@ -392,14 +365,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Video not found" });
       }
       
-      // Delete video file if it's a local file
-      if (video.duongDan && video.duongDan.startsWith('/uploads/')) {
-        const videoPath = path.join(uploadsDir, video.duongDan.replace("/uploads/", ""));
-        if (fs.existsSync(videoPath)) {
-          fs.unlinkSync(videoPath);
-        }
-      }
-      
+      // Xóa video từ cơ sở dữ liệu
+      // Lưu ý: Catbox không hỗ trợ xóa file trực tiếp mà không có user hash
       await storage.deleteVideo(id);
       res.status(204).send();
     } catch (error) {
