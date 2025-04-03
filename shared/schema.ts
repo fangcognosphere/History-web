@@ -3,15 +3,17 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
 
-// Enums for article categories
+// Enums for article categories and user roles
 export const danhMucEnum = pgEnum('danh_muc', ['NhanVat', 'SuKien', 'TrieuDai']);
+export const vaiTroEnum = pgEnum('vai_tro', ['Admin', 'User']);
 
-// Admin accounts table
+// User accounts table
 export const taiKhoan = pgTable("TaiKhoan", {
   id: serial("id").primaryKey(),
   hoTen: text("HoTen").notNull(),
   tenDangNhap: text("TenDangNhap").notNull().unique(),
   matKhau: text("MatKhau").notNull(),
+  vaiTro: vaiTroEnum("VaiTro").default('User'),
   ngayTao: timestamp("NgayTao").defaultNow(),
 });
 
@@ -31,7 +33,6 @@ export const nhanVat = pgTable("NhanVat", {
   tenNhanVat: text("TenNhanVat").notNull(),
   namSinh: integer("NamSinh"),
   namMat: integer("NamMat"),
-  queQuan: text("QueQuan"),
   moTa: text("MoTa"),
   trieuDaiId: integer("TrieuDaiId").references(() => trieuDai.id),
   hinhAnh: text("HinhAnh"),
@@ -42,7 +43,6 @@ export const suKien = pgTable("SuKien", {
   id: serial("id").primaryKey(),
   tenSuKien: text("TenSuKien").notNull(),
   namXayRa: integer("NamXayRa"),
-  diaDiem: text("DiaDiem"),
   moTa: text("MoTa"),
   trieuDaiId: integer("TrieuDaiId").references(() => trieuDai.id),
   hinhAnh: text("HinhAnh"),

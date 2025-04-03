@@ -4,9 +4,11 @@ import {
   useMutation,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { TaiKhoan, LoginData } from "@shared/schema";
+import { TaiKhoan, LoginData, InsertTaiKhoan } from "@shared/schema";
 import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+
+type RegisterData = Omit<InsertTaiKhoan, "vaiTro"> & { xacNhanMatKhau: string };
 
 type AuthContextType = {
   user: TaiKhoan | null;
@@ -14,6 +16,7 @@ type AuthContextType = {
   error: Error | null;
   loginMutation: UseMutationResult<TaiKhoan, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
+  registerMutation: UseMutationResult<TaiKhoan, Error, RegisterData>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -69,6 +72,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const registerMutation = useMutation({
+    mutationFn: async (data: RegisterData) => {
+      const { xacNhanMatKhau, ...registerData } = data;
+      const res = await apiRequest("POST", "/api/register", registerData);
+      return await res.json();
+    },
+    onSuccess: (user: TaiKhoan) => {
+      queryClient.setQueryData(["/api/user"], user);
+      toast({
+        title: "Đăng ký thành công",
+        description: `Chào mừng, ${user.hoTen}!`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Đăng ký thất bại",
+        description: error.message || "Không thể đăng ký tài khoản. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    },
+  });
+
   return (
     <AuthContext.Provider
       value={{
@@ -77,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         error,
         loginMutation,
         logoutMutation,
+        registerMutation,
       }}
     >
       {children}

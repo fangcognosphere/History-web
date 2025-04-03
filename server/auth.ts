@@ -2,8 +2,6 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express } from "express";
 import session from "express-session";
-import { scrypt, randomBytes, timingSafeEqual } from "crypto";
-import { promisify } from "util";
 import { storage } from "./storage";
 import { TaiKhoan } from "@shared/schema";
 
@@ -11,21 +9,6 @@ declare global {
   namespace Express {
     interface User extends TaiKhoan {}
   }
-}
-
-const scryptAsync = promisify(scrypt);
-
-async function hashPassword(password: string) {
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
-}
-
-async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
 export function setupAuth(app: Express) {
@@ -53,7 +36,7 @@ export function setupAuth(app: Express) {
       async (tenDangNhap, matKhau, done) => {
         try {
           const user = await storage.getTaiKhoanByTenDangNhap(tenDangNhap);
-          if (!user || !(await comparePasswords(matKhau, user.matKhau))) {
+          if (!user || matKhau !== user.matKhau) {
             return done(null, false);
           } else {
             return done(null, user);
@@ -71,6 +54,35 @@ export function setupAuth(app: Express) {
       done(null, user);
     } catch (error) {
       done(error);
+    }
+  });
+
+  // Đăng ký tài khoản mới
+  app.post("/api/register", async (req, res, next) => {
+    try {
+      const { tenDangNhap, matKhau, hoTen } = req.body;
+      
+      // Kiểm tra xem tên đăng nhập đã tồn tại chưa
+      const existingUser = await storage.getTaiKhoanByTenDangNhap(tenDangNhap);
+      if (existingUser) {
+        return res.status(400).json({ message: "Tên đăng nhập đã tồn tại" });
+      }
+      
+      // Tạo tài khoản mới, lưu mật khẩu dạng văn bản thường
+      const user = await storage.createTaiKhoan({
+        tenDangNhap,
+        matKhau,
+        hoTen
+      });
+
+      // Đăng nhập ngay sau khi đăng ký
+      req.login(user, (err) => {
+        if (err) return next(err);
+        res.status(201).json(user);
+      });
+    } catch (error) {
+      console.error("Error registering user:", error);
+      res.status(500).json({ message: "Đã xảy ra lỗi khi đăng ký" });
     }
   });
 

@@ -36,7 +36,7 @@ type RegistrationFormValues = z.infer<typeof registrationSchema>;
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>('login');
   const [location, navigate] = useLocation();
-  const { user, isLoading, loginMutation } = useAuth();
+  const { user, isLoading, loginMutation, registerMutation } = useAuth();
 
   // Redirect if user is already logged in
   useEffect(() => {
@@ -70,9 +70,7 @@ export default function AuthPage() {
   };
 
   const onRegistrationSubmit = (values: RegistrationFormValues) => {
-    // Since registration is disabled for regular users in this app,
-    // we'll show an alert instead
-    alert('Đăng ký tài khoản mới không khả dụng. Vui lòng liên hệ quản trị viên.');
+    registerMutation.mutate(values);
   };
 
   if (isLoading) {
@@ -213,13 +211,14 @@ export default function AuthPage() {
                     )}
                   />
 
-                  <Button type="submit" className="w-full" disabled>
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={registerMutation.isPending}
+                  >
+                    {registerMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Đăng ký
                   </Button>
-                  
-                  <p className="text-sm text-center text-muted-foreground">
-                    Đăng ký tài khoản mới hiện không khả dụng. Vui lòng liên hệ quản trị viên.
-                  </p>
                 </form>
               </Form>
             </TabsContent>

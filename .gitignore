@@ -1,6 +1,44 @@
+# Dependencies
 node_modules
-dist
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/dist
+/build
+
+# Environment Variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
 .DS_Store
-server/public
-vite.config.ts.*
-*.tar.gz
+.vscode/
+.idea/
+*.lock
+*.log
+
+# Temp directories
+.temp
+.tmp
+.cache
+
+# Replit specific files
+.replit
+replit.nix
+.breakpoints
+
+# Local uploads
+uploads/
+uploads/*
