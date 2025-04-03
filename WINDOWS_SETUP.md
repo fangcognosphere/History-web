@@ -1,108 +1,164 @@
-# Hướng dẫn cài đặt và chạy trên Windows
+# Hướng dẫn cài đặt và chạy dự án trên Windows
 
-Đây là hướng dẫn chi tiết cách cài đặt và chạy ứng dụng trên hệ điều hành Windows.
+Tài liệu này cung cấp hướng dẫn chi tiết để chạy dự án trên máy tính Windows local và triển khai lên Vercel.
 
-## 1. Cài đặt Node.js và npm
+## 1. Thay thế các dependency của Replit
 
-1. Tải Node.js từ trang chủ: https://nodejs.org/en/download/ (khuyên dùng phiên bản LTS)
-2. Cài đặt Node.js theo hướng dẫn
-3. Kiểm tra cài đặt bằng cách mở Command Prompt và chạy:
-   ```
-   node -v
-   npm -v
-   ```
+Mở file `package.json` và thực hiện các thay đổi sau:
 
-## 2. Cài đặt PostgreSQL và pgAdmin 4
+### 1.1. Xóa các dependency liên quan đến Replit
 
-1. Tải PostgreSQL từ trang chủ: https://www.postgresql.org/download/windows/
-2. Cài đặt PostgreSQL và pgAdmin 4 theo hướng dẫn
-3. Trong quá trình cài đặt:
-   - Ghi nhớ mật khẩu cho người dùng postgres
-   - Giữ cổng mặc định là 5432
-   - Cài đặt tất cả các components được đề xuất
+```json
+// Xóa các dòng này khỏi phần dependencies
+"@replit/vite-plugin-shadcn-theme-json": "^0.0.4",
+```
 
-## 3. Tạo cơ sở dữ liệu
+```json
+// Xóa các dòng này khỏi phần devDependencies
+"@replit/vite-plugin-cartographer": "^0.0.11",
+"@replit/vite-plugin-runtime-error-modal": "^0.0.3",
+```
+
+### 1.2. Thêm các dependency thay thế
+
+```json
+// Thêm vào phần dependencies
+"shadcn-ui-theme-plugin": "^1.1.1",
+```
+
+```json
+// Thêm vào phần devDependencies
+"@vitejs/plugin-react-swc": "^3.5.0",
+"vite-plugin-error-overlay": "^1.1.0",
+```
+
+## 2. Cập nhật cấu hình Vite
+
+Thay đổi nội dung file `vite.config.ts` như sau:
+
+```typescript
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+// Thay thế các import từ Replit
+import themePlugin from "shadcn-ui-theme-plugin";
+import errorOverlay from "vite-plugin-error-overlay";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    errorOverlay(),
+    themePlugin(),
+    // Xóa phần này vì nó chỉ dành cho Replit
+    // ...(process.env.NODE_ENV !== "production" &&
+    // process.env.REPL_ID !== undefined
+    //   ? [
+    //       await import("@replit/vite-plugin-cartographer").then((m) =>
+    //         m.cartographer(),
+    //       ),
+    //     ]
+    //   : []),
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "client", "src"),
+      "@shared": path.resolve(__dirname, "shared"),
+      "@assets": path.resolve(__dirname, "attached_assets"),
+    },
+  },
+  root: path.resolve(__dirname, "client"),
+  build: {
+    outDir: path.resolve(__dirname, "dist/public"),
+    emptyOutDir: true,
+  },
+});
+```
+
+## 3. Thiết lập biến môi trường cho Database
+
+Tạo file `.env` tại thư mục gốc với nội dung sau:
+
+```
+DATABASE_URL=postgresql://username:password@localhost:5432/LichSuVietNam
+PGUSER=username
+PGPASSWORD=password
+PGDATABASE=LichSuVietNam
+PGHOST=localhost
+PGPORT=5432
+```
+
+Thay thế `username` và `password` bằng thông tin đăng nhập của bạn.
+
+## 4. Thiết lập Database PostgreSQL
+
+### Cài đặt PostgreSQL trên Windows
+
+1. Tải và cài đặt PostgreSQL từ [trang chủ](https://www.postgresql.org/download/windows/)
+2. Trong quá trình cài đặt, hãy nhớ mật khẩu bạn đặt cho user `postgres`
+3. Cài đặt pgAdmin 4 từ [trang chủ](https://www.pgadmin.org/download/pgadmin-4-windows/)
+
+### Tạo Database
 
 1. Mở pgAdmin 4
-2. Nhập mật khẩu bạn đã tạo trong quá trình cài đặt PostgreSQL
-3. Trong Object Explorer (bên trái), kết nối đến máy chủ PostgreSQL
-4. Nhấp chuột phải vào "Databases" và chọn "Create > Database..."
-5. Đặt tên cho cơ sở dữ liệu là: `LichSuVietNam`
-6. Nhấp vào "Save" để tạo cơ sở dữ liệu
+2. Kết nối đến server PostgreSQL local
+3. Tạo một database mới với tên `LichSuVietNam`:
+   - Chuột phải vào "Databases"
+   - Chọn "Create" -> "Database"
+   - Nhập tên "LichSuVietNam"
+   - Nhấn "Save"
 
-## 4. Nhập cấu trúc cơ sở dữ liệu
+## 5. Cài đặt và chạy dự án
 
-1. Nhấp chuột phải vào cơ sở dữ liệu `LichSuVietNam` và chọn "Query Tool"
-2. Mở file `database/init.sql` trong project
-3. Sao chép toàn bộ nội dung và dán vào Query Tool
-4. Nhấp vào nút "Execute/Refresh" (biểu tượng sấm sét) để chạy script
+```bash
+# Cài đặt dependencies
+npm install
 
-## 5. Cấu hình môi trường
+# Tạo schema database
+npm run db:push
 
-1. Tạo file `.env` trong thư mục gốc của dự án
-2. Sao chép nội dung từ file `.env.example` và điền thông tin của bạn:
-   ```
-   # Database
-   DATABASE_URL=postgres://postgres:1@localhost:5432/LichSuVietNam
-   PGUSER=postgres
-   PGPASSWORD=1
-   PGHOST=localhost
-   PGPORT=5432
-   PGDATABASE=LichSuVietNam
+# Khởi động dự án ở chế độ development
+npm run dev
+```
 
-   # Session
-   SESSION_SECRET=your_session_secret
+## 6. Triển khai lên Vercel
 
-   # Server
-   PORT=5000
+### 6.1. Tạo file cấu hình Vercel
 
-   # Environment
-   NODE_ENV=development
-   ```
-   Thay `your_session_secret` bằng một chuỗi bất kỳ cho SESSION_SECRET.
+Tạo file `vercel.json` tại thư mục gốc:
 
-## 6. Chuẩn bị package.json và vite.config.js
+```json
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}
+```
 
-1. Sao chép nội dung từ `package.json.local` vào `package.json`
-2. Sao chép nội dung từ `vite.config.js.local` vào `vite.config.js` (tạo mới nếu chưa có)
+### 6.2. Đăng ký Database
 
-## 7. Cài đặt các gói phụ thuộc
+1. Đăng ký một tài khoản trên [Neon](https://neon.tech/) hoặc [Supabase](https://supabase.com/) để có PostgreSQL database miễn phí
+2. Tạo một project mới và lấy connection string
+3. Thêm biến môi trường `DATABASE_URL` vào dự án Vercel của bạn
 
-1. Mở Command Prompt trong thư mục gốc của dự án
-2. Chạy lệnh:
-   ```
-   npm install
-   ```
+### 6.3. Kết nối GitHub và triển khai
 
-## 8. Chạy ứng dụng
+1. Đẩy code lên GitHub
+2. Kết nối repository với Vercel
+3. Cấu hình các biến môi trường:
+   - `DATABASE_URL`
+   - `SESSION_SECRET` (một chuỗi ngẫu nhiên để mã hóa session)
+   - Các biến PostgreSQL khác nếu cần
 
-1. Mở Command Prompt trong thư mục gốc của dự án
-2. Chạy lệnh:
-   ```
-   npm run windows:dev
-   ```
-3. Truy cập ứng dụng tại địa chỉ: http://localhost:5000
-
-## 9. Đăng nhập vào hệ thống
-
-Sử dụng tài khoản admin mặc định:
-- Tên đăng nhập: `admin`
-- Mật khẩu: `admin123`
-
-## Ghi chú
-
-- Nếu bạn gặp lỗi khi chạy ứng dụng, hãy kiểm tra:
-  - PostgreSQL đang chạy
-  - Thông tin kết nối trong file `.env` chính xác
-  - Cơ sở dữ liệu đã được tạo và khởi tạo đúng cách
-  - Node.js và npm được cài đặt đúng phiên bản
-
-- Để build ứng dụng cho production, chạy:
-  ```
-  npm run windows:build
-  ```
-
-- Để chạy ứng dụng đã build, chạy:
-  ```
-  npm run windows:start
-  ```
+4. Triển khai dự án và truy cập vào URL được Vercel cung cấp
