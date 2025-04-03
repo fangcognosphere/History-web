@@ -464,10 +464,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       
-      // Verify if current user is admin or the account owner
+      // Verify if current user is admin
       const currentUser = req.user;
-      if (!currentUser || (currentUser.id !== id && currentUser.vaiTro !== 'Admin')) {
-        return res.status(403).json({ error: "Unauthorized" });
+      if (!currentUser || currentUser.vaiTro !== 'Admin') {
+        return res.status(403).json({ error: "Unauthorized: Admin access required" });
       }
 
       const account = await storage.getTaiKhoan(id);
@@ -475,22 +475,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Account not found" });
       }
 
-      const { hoTen, tenDangNhap, vaiTro } = req.body;
+      const { hoTen, tenDangNhap, vaiTro, password } = req.body;
       
-      // Only admin can change the role
-      if (vaiTro && currentUser.vaiTro !== 'Admin') {
-        return res.status(403).json({ error: "Unauthorized: Cannot change role" });
-      }
-
-      const updateData: { hoTen?: string; tenDangNhap?: string; vaiTro?: 'Admin' | 'User' } = {};
+      const updateData: { hoTen?: string; tenDangNhap?: string; vaiTro?: 'Admin' | 'User', password?: string } = {};
       if (hoTen) updateData.hoTen = hoTen;
       if (tenDangNhap) updateData.tenDangNhap = tenDangNhap;
       if (vaiTro) updateData.vaiTro = vaiTro;
+      if (password) updateData.password = password;
 
       const updatedAccount = await storage.updateTaiKhoan(id, updateData);
       
       // Remove password field for security
-      const { password, ...safeAccount } = updatedAccount!;
+      const { password: pwd, ...safeAccount } = updatedAccount!;
       
       res.json(safeAccount);
     } catch (error) {

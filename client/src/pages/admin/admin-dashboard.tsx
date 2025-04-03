@@ -98,7 +98,7 @@ export default function AdminDashboard() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Triều đại lịch sử</CardTitle>
+              <CardTitle className="text-sm font-medium">Thời kỳ lịch sử</CardTitle>
               <PieChart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
           <Link href="/admin/dynasties">
             <Button className="w-full h-20 text-sm" size="default" variant="outline">
               <ClipboardList className="mr-2 h-5 w-5" />
-              Quản lý triều đại
+              Quản lý thời kỳ
             </Button>
           </Link>
         </div>

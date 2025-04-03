@@ -47,22 +47,22 @@ export default function AdminDynasties() {
       
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || 'Không thể xóa triều đại');
+        throw new Error(error.error || 'Không thể xóa thời kỳ');
       }
       
       return true;
     },
     onSuccess: () => {
       toast({
-        title: "Triều đại đã được xóa",
-        description: "Triều đại đã được xóa thành công",
+        title: "Thời kỳ đã được xóa",
+        description: "Thời kỳ đã được xóa thành công",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/trieudai'] });
       setDeleteDialogOpen(false);
     },
     onError: (error: Error) => {
       toast({
-        title: "Lỗi khi xóa triều đại",
+        title: "Lỗi khi xóa thời kỳ",
         description: error.message,
         variant: "destructive",
       });
@@ -97,15 +97,15 @@ export default function AdminDynasties() {
   };
 
   return (
-    <AdminLayout title="Quản lý triều đại">
+    <AdminLayout title="Quản lý thời kỳ">
       <div className="space-y-6">
         {/* Header with actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-2xl font-bold">Danh sách triều đại</h2>
+          <h2 className="text-2xl font-bold">Danh sách thời kỳ</h2>
           <Link href="/admin/dynasties/new">
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Thêm triều đại mới
+              Thêm thời kỳ mới
             </Button>
           </Link>
         </div>
@@ -114,7 +114,7 @@ export default function AdminDynasties() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
-            placeholder="Tìm kiếm triều đại..."
+            placeholder="Tìm kiếm thời kỳ..."
             className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -127,7 +127,7 @@ export default function AdminDynasties() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[50px]">ID</TableHead>
-                <TableHead>Tên triều đại</TableHead>
+                <TableHead>Tên thời kỳ</TableHead>
                 <TableHead className="hidden md:table-cell">Năm bắt đầu</TableHead>
                 <TableHead className="hidden md:table-cell">Năm kết thúc</TableHead>
                 <TableHead className="hidden md:table-cell">Kinh đô</TableHead>
@@ -150,7 +150,7 @@ export default function AdminDynasties() {
               ) : filteredDynasties.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                    Không tìm thấy triều đại nào
+                    Không tìm thấy thời kỳ nào
                   </TableCell>
                 </TableRow>
               ) : (
@@ -196,9 +196,9 @@ export default function AdminDynasties() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Xác nhận xóa triều đại</DialogTitle>
+            <DialogTitle>Xác nhận xóa thời kỳ</DialogTitle>
             <DialogDescription>
-              Bạn có chắc chắn muốn xóa triều đại này? Hành động này không thể hoàn tác.
+              Bạn có chắc chắn muốn xóa thời kỳ này? Hành động này không thể hoàn tác.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -215,7 +215,7 @@ export default function AdminDynasties() {
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Xóa triều đại
+              Xóa thời kỳ
             </Button>
           </DialogFooter>
         </DialogContent>

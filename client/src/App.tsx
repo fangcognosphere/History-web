@@ -20,6 +20,9 @@ import AdminAccounts from "@/pages/admin/admin-accounts";
 import AdminHistoricalFigures from "@/pages/admin/admin-historical-figures";
 import AdminHistoricalEvents from "@/pages/admin/admin-historical-events";
 import AdminDynasties from "@/pages/admin/admin-dynasties";
+import AdminDynastyEdit from "@/pages/admin/admin-dynasty-edit";
+import AdminHistoricalFigureEdit from "@/pages/admin/admin-historical-figure-edit";
+import AdminHistoricalEventEdit from "@/pages/admin/admin-historical-event-edit";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -39,8 +42,14 @@ function Router() {
       <ProtectedRoute path="/admin/articles/edit/:id" component={AdminArticleEdit} />
       <ProtectedRoute path="/admin/accounts" component={AdminAccounts} />
       <ProtectedRoute path="/admin/historical-figures" component={AdminHistoricalFigures} />
+      <ProtectedRoute path="/admin/historical-figures/new" component={AdminHistoricalFigureEdit} />
+      <ProtectedRoute path="/admin/historical-figures/edit/:id" component={AdminHistoricalFigureEdit} />
       <ProtectedRoute path="/admin/historical-events" component={AdminHistoricalEvents} />
+      <ProtectedRoute path="/admin/historical-events/new" component={AdminHistoricalEventEdit} />
+      <ProtectedRoute path="/admin/historical-events/edit/:id" component={AdminHistoricalEventEdit} />
       <ProtectedRoute path="/admin/dynasties" component={AdminDynasties} />
+      <ProtectedRoute path="/admin/dynasties/new" component={AdminDynastyEdit} />
+      <ProtectedRoute path="/admin/dynasties/edit/:id" component={AdminDynastyEdit} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />
