@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { insertBaiVietSchema, danhMucEnum } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { queryClient, apiRequest } from '@/lib/queryClient';
+import { queryClient, apiRequest, getQueryFn } from '@/lib/queryClient';
 import { useLocation } from 'wouter';
 import { Loader2 } from 'lucide-react';
 
@@ -38,19 +38,19 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
   
   // Get historical figures for dropdown
   const { data: nhanVats = [] } = useQuery({
-    queryKey: ['/api/figure'],
+    queryKey: ['/api/nhanvat'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Get historical events for dropdown
   const { data: suKiens = [] } = useQuery({
-    queryKey: ['/api/event'],
+    queryKey: ['/api/sukien'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Get historical dynasties for dropdown
   const { data: trieuDais = [] } = useQuery({
-    queryKey: ['/api/dynasty'],
+    queryKey: ['/api/trieudai'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
@@ -73,7 +73,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
   // Create article mutation
   const createArticleMutation = useMutation({
     mutationFn: async (data: FormData) => {
-      const res = await fetch('/api/article', {
+      const res = await fetch('/api/baiviet', {
         method: 'POST',
         body: data,
         credentials: 'include',
@@ -81,7 +81,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
       
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to create article');
+        throw new Error(errorData.error || 'Không thể tạo bài viết');
       }
       
       return res.json();
@@ -91,7 +91,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
         title: 'Thành công',
         description: 'Đã tạo bài viết mới',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/article'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/baiviet'] });
       navigate('/admin/articles');
     },
     onError: (error: Error) => {
@@ -106,7 +106,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
   // Update article mutation
   const updateArticleMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormData }) => {
-      const res = await fetch(`/api/article/${id}`, {
+      const res = await fetch(`/api/baiviet/${id}`, {
         method: 'PUT',
         body: data,
         credentials: 'include',
@@ -114,7 +114,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
       
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to update article');
+        throw new Error(errorData.error || 'Không thể cập nhật bài viết');
       }
       
       return res.json();
@@ -124,7 +124,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
         title: 'Thành công',
         description: 'Đã cập nhật bài viết',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/article'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/baiviet'] });
       navigate('/admin/articles');
     },
     onError: (error: Error) => {

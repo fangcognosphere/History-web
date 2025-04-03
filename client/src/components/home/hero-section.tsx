@@ -4,7 +4,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-primary-800 to-primary-700 text-white">
       <div className="absolute inset-0 bg-black opacity-40"></div>
-      <div className="absolute inset-0 bg-[url('https://files.catbox.moe/lzr4q0.jpg')] bg-cover bg-center opacity-40"></div>
+      <div className="absolute inset-0 bg-[url('https://vanhoavaphattrien.vn/uploads/images/blog/photongbientap/2023/02/10/b1dbphu-1676017164.jpg')] bg-cover bg-center opacity-40"></div>
       <div className="container mx-auto px-4 py-16 sm:py-24 relative z-10">
         <div className="max-w-3xl">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">Khám Phá Chiều Sâu Lịch Sử Việt Nam</h1>

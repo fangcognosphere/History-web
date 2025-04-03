@@ -21,7 +21,7 @@ export default function AdminDynastyEdit() {
   const title = isEdit ? 'Chỉnh sửa thời kỳ' : 'Thêm thời kỳ mới';
 
   return (
-    <AdminLayout>
+    <AdminLayout title={title}>
       <div className="container py-6">
         <h1 className="text-2xl font-bold mb-6">{title}</h1>
         

@@ -1,57 +1,49 @@
-import { useEffect, useState } from 'react';
-import { useRoute, useLocation } from 'wouter';
+import React from 'react';
+import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { AdminLayout } from '@/components/layout/admin-layout';
-import { HistoricalFigureForm } from '@/components/admin/historical-figure-form';
 import { getQueryFn } from '@/lib/queryClient';
-import { Skeleton } from '@/components/ui/skeleton';
+import { HistoricalFigureForm } from '@/components/admin/historical-figure-form';
+import { AdminLayout } from '@/components/layout/admin-layout';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminHistoricalFigureEdit() {
-  const [, setLocation] = useLocation();
-  const [, params] = useRoute('/admin/historical-figures/edit/:id');
-  const [, newParams] = useRoute('/admin/historical-figures/new');
-  
-  const isNewMode = Boolean(newParams);
-  const figureId = params?.id ? parseInt(params.id) : undefined;
+  const params = useParams();
+  const isEdit = Boolean(params.id);
+  const id = params.id ? parseInt(params.id) : null;
 
-  // Only fetch data if we're in edit mode
   const { data: figure, isLoading, error } = useQuery({
-    queryKey: ['/api/nhanvat', figureId],
+    queryKey: [`/api/nhanvat/${id}`],
     queryFn: getQueryFn({ on401: "throw" }),
-    enabled: !!figureId && !isNewMode,
+    enabled: isEdit && !!id,
   });
 
-  // Redirect to figures list if figure not found
-  useEffect(() => {
-    if (!isLoading && !isNewMode && (!figure || error)) {
-      setLocation('/admin/historical-figures');
-    }
-  }, [isLoading, figure, error, setLocation, isNewMode]);
+  const title = isEdit ? 'Chỉnh sửa nhân vật lịch sử' : 'Thêm nhân vật lịch sử mới';
 
   return (
-    <AdminLayout title={isNewMode ? "Thêm nhân vật lịch sử mới" : "Chỉnh sửa nhân vật lịch sử"}>
-      <div className="space-y-6">
-        {(isLoading && !isNewMode) ? (
-          <div className="space-y-4">
-            <Skeleton className="h-8 w-1/2" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-            <div className="grid grid-cols-2 gap-4">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-            <Skeleton className="h-32 w-full" />
-            <div className="flex justify-end gap-4">
-              <Skeleton className="h-10 w-24" />
-              <Skeleton className="h-10 w-24" />
-            </div>
+    <AdminLayout title={title}>
+      <div className="container py-6">
+        <h1 className="text-2xl font-bold mb-6">{title}</h1>
+        
+        {isEdit && isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        ) : (
+        )}
+
+        {isEdit && error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertTitle>Lỗi</AlertTitle>
+            <AlertDescription>
+              Không thể tải thông tin nhân vật. Vui lòng thử lại sau.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {(!isEdit || (isEdit && figure)) && (
           <HistoricalFigureForm 
-            initialData={isNewMode ? undefined : figure} 
-            isEdit={!isNewMode}
+            initialData={figure} 
+            isEdit={isEdit} 
           />
         )}
       </div>
