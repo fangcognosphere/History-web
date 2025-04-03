@@ -10,7 +10,7 @@ export function HeroSection() {
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">Khám Phá Chiều Sâu Lịch Sử Việt Nam</h1>
           <p className="text-lg sm:text-xl mb-8">Hành trình qua các triều đại, câu chuyện về những nhân vật lịch sử và các sự kiện quan trọng đã định hình đất nước hôm nay.</p>
           <div className="flex flex-wrap gap-4">
-            <Link href="#featured" className="bg-white text-primary-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors">
+            <Link href="#featured" className="bg-white text-primary hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors">
               Khám Phá Ngay
             </Link>
             <Link href="#categories" className="bg-transparent border-2 border-white hover:bg-white/10 px-6 py-3 rounded-lg font-medium transition-colors">

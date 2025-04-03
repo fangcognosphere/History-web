@@ -5,6 +5,7 @@ import { FileText, Image, Film, PieChart, TrendingUp, Users } from 'lucide-react
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getQueryFn } from '@/lib/queryClient';
 
 export default function AdminDashboard() {
   // Fetch articles count
