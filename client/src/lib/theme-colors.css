@@ -1,8 +1,8 @@
 /* Chế độ sáng (mặc định) */
 :root {
   /* Các màu chính */
-  --primary: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
-  --primary-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --primary: 0 77% 77%; /* #F19696 - Hồng đỏ nhạt */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF - Trắng */
   
   /* Màu nền và chữ */
   --background: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
@@ -27,7 +27,7 @@
   /* Border, input và destructive */
   --border: 39 49% 69%; /* #DAAD86 - Vàng nâu */
   --input: 39 49% 69%; /* #DAAD86 - Vàng nâu */
-  --ring: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
+  --ring: 0 77% 77%; /* #F19696 - Hồng đỏ nhạt */
   --destructive: 0 84% 60%; /* Đỏ */
   --destructive-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
   
@@ -39,10 +39,10 @@
   --chart-5: 48 54% 87%; /* #FBEEC1 - Kem nhạt */
 
   /* Sidebar */
-  --sidebar-background: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
-  --sidebar-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
-  --sidebar-primary: 202 42% 57%; /* #659DBD - Xanh biển */
-  --sidebar-primary-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --sidebar-background: 0 77% 77%; /* #F19696 - Hồng đỏ nhạt */
+  --sidebar-foreground: 0 0% 100%; /* #FFFFFF - Trắng */
+  --sidebar-primary: 0 77% 87%; /* Lighter hồng đỏ nhạt */
+  --sidebar-primary-foreground: 0 0% 100%; /* #FFFFFF - Trắng */
   --sidebar-accent: 35 48% 57%; /* #BC986A - Nâu nhạt */
   --sidebar-accent-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
   --sidebar-border: 39 49% 69%; /* #DAAD86 - Vàng nâu */
@@ -55,8 +55,8 @@
 /* Chế độ tối */
 .dark {
   /* Các màu chính */
-  --primary: 71 52% 30%; /* Darker #8D8741 - Xanh rêu đậm tối */
-  --primary-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --primary: 0 85% 45%; /* #D91C1C - Đỏ đậm */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF - Trắng */
   
   /* Màu nền và chữ */
   --background: 71 52% 15%; /* Very dark moss green */
@@ -81,7 +81,7 @@
   /* Border, input và destructive */
   --border: 39 49% 39%; /* Darker #DAAD86 - Vàng nâu tối */
   --input: 39 49% 39%; /* Darker #DAAD86 - Vàng nâu tối */
-  --ring: 202 42% 47%; /* #659DBD - Xanh biển */
+  --ring: 0 85% 45%; /* #D91C1C - Đỏ đậm */
   --destructive: 0 84% 50%; /* Đỏ tối */
   --destructive-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
   
@@ -93,10 +93,10 @@
   --chart-5: 48 54% 87%; /* #FBEEC1 - Kem nhạt */
 
   /* Sidebar */
-  --sidebar-background: 71 52% 20%; /* Darker moss green */
-  --sidebar-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
-  --sidebar-primary: 202 42% 47%; /* #659DBD - Xanh biển */
-  --sidebar-primary-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --sidebar-background: 0 85% 45%; /* #D91C1C - Đỏ đậm */
+  --sidebar-foreground: 0 0% 100%; /* #FFFFFF - Trắng */
+  --sidebar-primary: 0 85% 35%; /* Darker đỏ đậm */
+  --sidebar-primary-foreground: 0 0% 100%; /* #FFFFFF - Trắng */
   --sidebar-accent: 35 48% 47%; /* #BC986A - Nâu nhạt */
   --sidebar-accent-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
   --sidebar-border: 39 49% 49%; /* #DAAD86 - Vàng nâu */
