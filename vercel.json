@@ -1,20 +1,26 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "vite",
-  "outputDirectory": "dist",
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "src": "server/index.ts",
+      "use": "@vercel/node"
     },
     {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/public"
+      }
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/$1"
+    }
+  ]
 }
