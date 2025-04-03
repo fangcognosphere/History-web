@@ -44,6 +44,10 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
     { name: 'Trang chủ', path: '/admin', icon: <Home size={16} /> },
     { name: 'Bài viết', path: '/admin/articles', icon: <Newspaper size={16} /> },
     { name: 'Hình ảnh & Video', path: '/admin/media', icon: <Image size={16} /> },
+    { name: 'Tài khoản', path: '/admin/accounts', icon: <User size={16} /> },
+    { name: 'Nhân vật lịch sử', path: '/admin/historical-figures', icon: <Award size={16} /> },
+    { name: 'Sự kiện lịch sử', path: '/admin/historical-events', icon: <History size={16} /> },
+    { name: 'Triều đại', path: '/admin/dynasties', icon: <FileText size={16} /> },
   ];
   
   const pageTitle = `${title} | Quản trị`;

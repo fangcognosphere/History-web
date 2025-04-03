@@ -21,6 +21,9 @@ export interface IStorage {
   getTaiKhoan(id: number): Promise<TaiKhoan | undefined>;
   getTaiKhoanByTenDangNhap(tenDangNhap: string): Promise<TaiKhoan | undefined>;
   createTaiKhoan(user: InsertTaiKhoan): Promise<TaiKhoan>;
+  getAllTaiKhoans(): Promise<TaiKhoan[]>;
+  updateTaiKhoan(id: number, user: Partial<InsertTaiKhoan>): Promise<TaiKhoan | undefined>;
+  deleteTaiKhoan(id: number): Promise<boolean>;
 
   // Articles
   getBaiViet(id: number): Promise<BaiViet | undefined>;
@@ -98,6 +101,24 @@ export class DatabaseStorage implements IStorage {
   async createTaiKhoan(user: InsertTaiKhoan): Promise<TaiKhoan> {
     const [newUser] = await db.insert(taiKhoan).values(user).returning();
     return newUser;
+  }
+
+  async getAllTaiKhoans(): Promise<TaiKhoan[]> {
+    return db.select().from(taiKhoan).orderBy(taiKhoan.id);
+  }
+
+  async updateTaiKhoan(id: number, user: Partial<InsertTaiKhoan>): Promise<TaiKhoan | undefined> {
+    const [updatedUser] = await db
+      .update(taiKhoan)
+      .set(user)
+      .where(eq(taiKhoan.id, id))
+      .returning();
+    return updatedUser;
+  }
+
+  async deleteTaiKhoan(id: number): Promise<boolean> {
+    const result = await db.delete(taiKhoan).where(eq(taiKhoan.id, id));
+    return !!result;
   }
 
   // Articles

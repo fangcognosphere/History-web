@@ -16,6 +16,10 @@ import AdminDashboard from "@/pages/admin/admin-dashboard";
 import AdminArticles from "@/pages/admin/admin-articles";
 import AdminMedia from "@/pages/admin/admin-media";
 import AdminArticleEdit from "@/pages/admin/admin-article-edit";
+import AdminAccounts from "@/pages/admin/admin-accounts";
+import AdminHistoricalFigures from "@/pages/admin/admin-historical-figures";
+import AdminHistoricalEvents from "@/pages/admin/admin-historical-events";
+import AdminDynasties from "@/pages/admin/admin-dynasties";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -33,6 +37,10 @@ function Router() {
       <ProtectedRoute path="/admin/media" component={AdminMedia} />
       <ProtectedRoute path="/admin/articles/new" component={AdminArticleEdit} />
       <ProtectedRoute path="/admin/articles/edit/:id" component={AdminArticleEdit} />
+      <ProtectedRoute path="/admin/accounts" component={AdminAccounts} />
+      <ProtectedRoute path="/admin/historical-figures" component={AdminHistoricalFigures} />
+      <ProtectedRoute path="/admin/historical-events" component={AdminHistoricalEvents} />
+      <ProtectedRoute path="/admin/dynasties" component={AdminDynasties} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />

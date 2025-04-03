@@ -34,7 +34,7 @@ import {
   Filter, 
   Loader2 
 } from 'lucide-react';
-import { queryClient } from '@/lib/queryClient';
+import { queryClient, getQueryFn } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminArticles() {

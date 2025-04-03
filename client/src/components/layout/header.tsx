@@ -29,6 +29,8 @@ export function Header() {
     logoutMutation.mutate();
     navigate('/');
   };
+  
+  // Không hiển thị đăng nhập/đăng xuất ở trang công khai
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
@@ -85,27 +87,13 @@ export function Header() {
             </button>
             
             {/* Admin Link */}
-            {user ? (
+            {user && (
               <div className="hidden sm:flex items-center space-x-3">
                 <Link href="/admin" className="text-sm font-medium hover:text-primary dark:hover:text-primary flex items-center space-x-1">
                   <i className="fas fa-user-shield"></i>
                   <span>Quản trị</span>
                 </Link>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleLogout}
-                  className="text-sm"
-                  disabled={logoutMutation.isPending}
-                >
-                  Đăng xuất
-                </Button>
               </div>
-            ) : (
-              <Link href="/auth" className="hidden sm:flex items-center space-x-1 text-sm font-medium hover:text-primary dark:hover:text-primary">
-                <i className="fas fa-sign-in-alt"></i>
-                <span>Đăng nhập</span>
-              </Link>
             )}
             
             {/* Mobile Menu Button */}
@@ -153,7 +141,7 @@ export function Header() {
             <Link href="/category/TrieuDai" className="py-2 font-medium hover:text-primary dark:hover:text-primary">
               Triều Đại
             </Link>
-            {user ? (
+            {user && (
               <>
                 <Link href="/admin" className="py-2 font-medium hover:text-primary dark:hover:text-primary flex items-center space-x-1">
                   <i className="fas fa-user-shield"></i>
@@ -168,11 +156,6 @@ export function Header() {
                   <span>Đăng xuất</span>
                 </button>
               </>
-            ) : (
-              <Link href="/auth" className="py-2 font-medium hover:text-primary dark:hover:text-primary flex items-center space-x-1">
-                <i className="fas fa-sign-in-alt"></i>
-                <span>Đăng nhập</span>
-              </Link>
             )}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AdminLayout } from '@/components/layout/admin-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Image, Film, PieChart, TrendingUp, Users } from 'lucide-react';
+import { FileText, Image, Film, PieChart, TrendingUp, Users, Award, History, ClipboardList } from 'lucide-react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -129,6 +129,34 @@ export default function AdminDashboard() {
             <Button className="w-full h-24 text-lg" size="lg" variant="outline">
               <Image className="mr-2 h-5 w-5" />
               Quản lý media
+            </Button>
+          </Link>
+        </div>
+        
+        {/* Additional Management Sections */}
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <Link href="/admin/accounts">
+            <Button className="w-full h-20 text-sm" size="default" variant="outline">
+              <Users className="mr-2 h-5 w-5" />
+              Quản lý tài khoản
+            </Button>
+          </Link>
+          <Link href="/admin/historical-figures">
+            <Button className="w-full h-20 text-sm" size="default" variant="outline">
+              <Award className="mr-2 h-5 w-5" />
+              Quản lý nhân vật
+            </Button>
+          </Link>
+          <Link href="/admin/historical-events">
+            <Button className="w-full h-20 text-sm" size="default" variant="outline">
+              <History className="mr-2 h-5 w-5" />
+              Quản lý sự kiện
+            </Button>
+          </Link>
+          <Link href="/admin/dynasties">
+            <Button className="w-full h-20 text-sm" size="default" variant="outline">
+              <ClipboardList className="mr-2 h-5 w-5" />
+              Quản lý triều đại
             </Button>
           </Link>
         </div>

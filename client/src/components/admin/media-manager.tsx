@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
-import { queryClient, apiRequest } from '@/lib/queryClient';
+import { queryClient, apiRequest, getQueryFn } from '@/lib/queryClient';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { VideoUpload } from '@/components/ui/video-upload';
 import { Button } from '@/components/ui/button';

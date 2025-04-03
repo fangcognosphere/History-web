@@ -410,6 +410,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Account management (for admin)
+  app.get("/api/account", async (req, res) => {
+    try {
+      // Verify if current user is admin
+      const currentUser = req.user;
+      if (!currentUser || currentUser.vaiTro !== 'Admin') {
+        return res.status(403).json({ error: "Unauthorized: Admin access required" });
+      }
+
+      // Get all accounts
+      const accounts = await storage.getAllTaiKhoans();
+      // Remove password field for security
+      const safeAccounts = accounts.map(account => {
+        const { password, ...safeAccount } = account;
+        return safeAccount;
+      });
+      
+      res.json(safeAccounts);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch accounts" });
+    }
+  });
+
+  app.delete("/api/account/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Verify if current user is admin
+      const currentUser = req.user;
+      if (!currentUser || currentUser.vaiTro !== 'Admin') {
+        return res.status(403).json({ error: "Unauthorized: Admin access required" });
+      }
+
+      // Don't allow deleting your own account
+      if (id === currentUser.id) {
+        return res.status(400).json({ error: "Cannot delete your own account" });
+      }
+
+      const account = await storage.getTaiKhoan(id);
+      if (!account) {
+        return res.status(404).json({ error: "Account not found" });
+      }
+
+      await storage.deleteTaiKhoan(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete account" });
+    }
+  });
+
+  app.put("/api/account/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Verify if current user is admin or the account owner
+      const currentUser = req.user;
+      if (!currentUser || (currentUser.id !== id && currentUser.vaiTro !== 'Admin')) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+
+      const account = await storage.getTaiKhoan(id);
+      if (!account) {
+        return res.status(404).json({ error: "Account not found" });
+      }
+
+      const { hoTen, tenDangNhap, vaiTro } = req.body;
+      
+      // Only admin can change the role
+      if (vaiTro && currentUser.vaiTro !== 'Admin') {
+        return res.status(403).json({ error: "Unauthorized: Cannot change role" });
+      }
+
+      const updateData: { hoTen?: string; tenDangNhap?: string; vaiTro?: 'Admin' | 'User' } = {};
+      if (hoTen) updateData.hoTen = hoTen;
+      if (tenDangNhap) updateData.tenDangNhap = tenDangNhap;
+      if (vaiTro) updateData.vaiTro = vaiTro;
+
+      const updatedAccount = await storage.updateTaiKhoan(id, updateData);
+      
+      // Remove password field for security
+      const { password, ...safeAccount } = updatedAccount!;
+      
+      res.json(safeAccount);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update account" });
+    }
+  });
+
   // Create HTTP server
   const httpServer = createServer(app);
 
