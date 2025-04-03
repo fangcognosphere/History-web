@@ -1,0 +1,104 @@
+/* Chế độ sáng (mặc định) */
+:root {
+  /* Các màu chính */
+  --primary: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
+  --primary-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  
+  /* Màu nền và chữ */
+  --background: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --foreground: 71 52% 20%; /* Darker moss green */
+  
+  /* Card và popover */
+  --card: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --card-foreground: 71 52% 25%; /* Darker moss green */
+  --popover: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --popover-foreground: 71 52% 25%; /* Darker moss green */
+  
+  /* Màu phụ và accent */
+  --secondary: 39 49% 69%; /* #DAAD86 - Vàng nâu */
+  --secondary-foreground: 71 52% 25%; /* Darker moss green */
+  --accent: 35 48% 57%; /* #BC986A - Nâu nhạt */
+  --accent-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  
+  /* Màu muted */
+  --muted: 48 54% 90%; /* Lighter cream */
+  --muted-foreground: 71 52% 35%; /* Lighter moss green */
+  
+  /* Border, input và destructive */
+  --border: 39 49% 69%; /* #DAAD86 - Vàng nâu */
+  --input: 39 49% 69%; /* #DAAD86 - Vàng nâu */
+  --ring: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
+  --destructive: 0 84% 60%; /* Đỏ */
+  --destructive-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  
+  /* Màu biểu đồ */
+  --chart-1: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
+  --chart-2: 202 42% 57%; /* #659DBD - Xanh biển */
+  --chart-3: 39 49% 69%; /* #DAAD86 - Vàng nâu */
+  --chart-4: 35 48% 57%; /* #BC986A - Nâu nhạt */
+  --chart-5: 48 54% 87%; /* #FBEEC1 - Kem nhạt */
+
+  /* Sidebar */
+  --sidebar-background: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
+  --sidebar-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --sidebar-primary: 202 42% 57%; /* #659DBD - Xanh biển */
+  --sidebar-primary-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --sidebar-accent: 35 48% 57%; /* #BC986A - Nâu nhạt */
+  --sidebar-accent-foreground: 48 54% 98%; /* #FBEEC1 - Kem nhạt */
+  --sidebar-border: 39 49% 69%; /* #DAAD86 - Vàng nâu */
+  --sidebar-ring: 48 54% 87%; /* #FBEEC1 - Kem nhạt */
+  
+  /* Các biến khác */
+  --radius: 0.5rem;
+}
+
+/* Chế độ tối */
+.dark {
+  /* Các màu chính */
+  --primary: 71 52% 30%; /* Darker #8D8741 - Xanh rêu đậm tối */
+  --primary-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  
+  /* Màu nền và chữ */
+  --background: 71 52% 15%; /* Very dark moss green */
+  --foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  
+  /* Card và popover */
+  --card: 71 52% 20%; /* Dark moss green */
+  --card-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --popover: 71 52% 20%; /* Dark moss green */
+  --popover-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  
+  /* Màu phụ và accent */
+  --secondary: 202 42% 37%; /* Darker #659DBD - Xanh biển tối */
+  --secondary-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --accent: 35 48% 37%; /* Darker #BC986A - Nâu nhạt tối */
+  --accent-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  
+  /* Màu muted */
+  --muted: 71 52% 25%; /* Darker moss green */
+  --muted-foreground: 48 54% 75%; /* Duller cream */
+  
+  /* Border, input và destructive */
+  --border: 39 49% 39%; /* Darker #DAAD86 - Vàng nâu tối */
+  --input: 39 49% 39%; /* Darker #DAAD86 - Vàng nâu tối */
+  --ring: 202 42% 47%; /* #659DBD - Xanh biển */
+  --destructive: 0 84% 50%; /* Đỏ tối */
+  --destructive-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  
+  /* Màu biểu đồ */
+  --chart-1: 71 52% 40%; /* #8D8741 - Xanh rêu đậm */
+  --chart-2: 202 42% 57%; /* #659DBD - Xanh biển */
+  --chart-3: 39 49% 69%; /* #DAAD86 - Vàng nâu */
+  --chart-4: 35 48% 57%; /* #BC986A - Nâu nhạt */
+  --chart-5: 48 54% 87%; /* #FBEEC1 - Kem nhạt */
+
+  /* Sidebar */
+  --sidebar-background: 71 52% 20%; /* Darker moss green */
+  --sidebar-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --sidebar-primary: 202 42% 47%; /* #659DBD - Xanh biển */
+  --sidebar-primary-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --sidebar-accent: 35 48% 47%; /* #BC986A - Nâu nhạt */
+  --sidebar-accent-foreground: 48 54% 90%; /* Lighter #FBEEC1 - Kem nhạt sáng hơn */
+  --sidebar-border: 39 49% 49%; /* #DAAD86 - Vàng nâu */
+  --sidebar-ring: 48 54% 77%; /* #FBEEC1 - Kem nhạt */
+}

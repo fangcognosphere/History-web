@@ -7,7 +7,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[url('https://files.catbox.moe/lzr4q0.jpg')] bg-cover bg-center opacity-40"></div>
       <div className="container mx-auto px-4 py-16 sm:py-24 relative z-10">
         <div className="max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">Khám Phá Chiều Sâu Lịch Sử Việt Nam</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">Khám Phá Chiều Sâu Lịch Sử Việt Nam</h1>
           <p className="text-lg sm:text-xl mb-8">Hành trình qua các triều đại, câu chuyện về những nhân vật lịch sử và các sự kiện quan trọng đã định hình đất nước hôm nay.</p>
           <div className="flex flex-wrap gap-4">
             <Link href="#featured" className="bg-white text-primary-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors">
