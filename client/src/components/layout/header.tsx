@@ -39,7 +39,7 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <Link href="/" className="flex items-center space-x-2">
-              <img src="https://files.catbox.moe/1id9w3.png" alt="Logo" className="h-10 w-auto" />
+              <img src="https://files.catbox.moe/ta56ul.png" alt="Logo" className="h-10 w-auto" />
               <h1 className="text-xl font-serif font-bold text-primary dark:text-primary">Lịch Sử Việt Nam</h1>
             </Link>
           </div>

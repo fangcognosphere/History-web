@@ -29,8 +29,8 @@ export function MediaGallery() {
     },
     {
       id: "3",
-      type: "video",
-      src: "https://files.catbox.moe/4kc6hd.mp4",
+      type: "image",
+      src: "https://files.catbox.moe/ccusk1.jpg",
       alt: "Cố đô Huế",
       title: "Cố đô Huế",
     },
