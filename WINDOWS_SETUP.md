@@ -1,108 +1,102 @@
-# Hướng dẫn cài đặt và chạy trên Windows
+# Hướng dẫn cài đặt và chạy dự án trên Windows
 
-Đây là hướng dẫn chi tiết cách cài đặt và chạy ứng dụng trên hệ điều hành Windows.
+## Yêu cầu hệ thống
 
-## 1. Cài đặt Node.js và npm
+- Node.js phiên bản 18.x trở lên
+- PostgreSQL phiên bản 14.x trở lên (thông qua pgAdmin 4)
+- Git
 
-1. Tải Node.js từ trang chủ: https://nodejs.org/en/download/ (khuyên dùng phiên bản LTS)
-2. Cài đặt Node.js theo hướng dẫn
-3. Kiểm tra cài đặt bằng cách mở Command Prompt và chạy:
+## Cài đặt Node.js
+
+1. Tải và cài đặt Node.js từ trang chủ: https://nodejs.org/
+2. Chọn phiên bản LTS (Long Term Support)
+3. Làm theo hướng dẫn cài đặt
+4. Kiểm tra cài đặt bằng cách mở Command Prompt và chạy:
    ```
-   node -v
-   npm -v
+   node --version
+   npm --version
    ```
 
-## 2. Cài đặt PostgreSQL và pgAdmin 4
+## Cài đặt PostgreSQL và pgAdmin 4
 
-1. Tải PostgreSQL từ trang chủ: https://www.postgresql.org/download/windows/
-2. Cài đặt PostgreSQL và pgAdmin 4 theo hướng dẫn
-3. Trong quá trình cài đặt:
-   - Ghi nhớ mật khẩu cho người dùng postgres
-   - Giữ cổng mặc định là 5432
-   - Cài đặt tất cả các components được đề xuất
+1. Tải và cài đặt PostgreSQL từ trang chủ: https://www.postgresql.org/download/windows/
+2. Trong quá trình cài đặt:
+   - Chọn cài đặt pgAdmin 4
+   - Đặt mật khẩu cho tài khoản postgres là "1"
+   - Chọn cổng mặc định 5432
+   - Hoàn thành cài đặt
+3. Mở pgAdmin 4 và đăng nhập
 
-## 3. Tạo cơ sở dữ liệu
+## Tạo cơ sở dữ liệu
 
 1. Mở pgAdmin 4
-2. Nhập mật khẩu bạn đã tạo trong quá trình cài đặt PostgreSQL
-3. Trong Object Explorer (bên trái), kết nối đến máy chủ PostgreSQL
-4. Nhấp chuột phải vào "Databases" và chọn "Create > Database..."
-5. Đặt tên cho cơ sở dữ liệu là: `LichSuVietNam`
-6. Nhấp vào "Save" để tạo cơ sở dữ liệu
+2. Kết nối vào PostgreSQL server
+3. Tạo database mới với tên "LichSuVietNam"
+4. Sử dụng tập lệnh SQL được cung cấp trong file `database.sql` để khởi tạo cấu trúc và dữ liệu mẫu:
+   - Nhấp chuột phải vào database "LichSuVietNam"
+   - Chọn "Query Tool"
+   - Mở file `database.sql` hoặc copy nội dung và dán vào Query Editor
+   - Chạy script
 
-## 4. Nhập cấu trúc cơ sở dữ liệu
+## Cài đặt và chạy dự án
 
-1. Nhấp chuột phải vào cơ sở dữ liệu `LichSuVietNam` và chọn "Query Tool"
-2. Mở file `database/init.sql` trong project
-3. Sao chép toàn bộ nội dung và dán vào Query Tool
-4. Nhấp vào nút "Execute/Refresh" (biểu tượng sấm sét) để chạy script
-
-## 5. Cấu hình môi trường
-
-1. Tạo file `.env` trong thư mục gốc của dự án
-2. Sao chép nội dung từ file `.env.example` và điền thông tin của bạn:
+1. Clone repo từ GitHub:
    ```
-   # Database
-   DATABASE_URL=postgres://postgres:1@localhost:5432/LichSuVietNam
-   PGUSER=postgres
-   PGPASSWORD=1
-   PGHOST=localhost
-   PGPORT=5432
-   PGDATABASE=LichSuVietNam
-
-   # Session
-   SESSION_SECRET=your_session_secret
-
-   # Server
-   PORT=5000
-
-   # Environment
-   NODE_ENV=development
+   git clone <repository-url>
+   cd <repository-folder>
    ```
-   Thay `your_session_secret` bằng một chuỗi bất kỳ cho SESSION_SECRET.
 
-## 6. Chuẩn bị package.json và vite.config.js
-
-1. Sao chép nội dung từ `package.json.local` vào `package.json`
-2. Sao chép nội dung từ `vite.config.js.local` vào `vite.config.js` (tạo mới nếu chưa có)
-
-## 7. Cài đặt các gói phụ thuộc
-
-1. Mở Command Prompt trong thư mục gốc của dự án
-2. Chạy lệnh:
+2. Cài đặt các dependency:
    ```
    npm install
    ```
 
-## 8. Chạy ứng dụng
-
-1. Mở Command Prompt trong thư mục gốc của dự án
-2. Chạy lệnh:
+3. Tạo file `.env` ở thư mục gốc với nội dung sau:
    ```
-   npm run windows:dev
+   DATABASE_URL="postgresql://postgres:1@localhost:5432/LichSuVietNam?schema=public"
+   SESSION_SECRET="your-secret-key"
    ```
-3. Truy cập ứng dụng tại địa chỉ: http://localhost:5000
 
-## 9. Đăng nhập vào hệ thống
+4. Chạy ứng dụng:
+   ```
+   npm run dev
+   ```
 
-Sử dụng tài khoản admin mặc định:
-- Tên đăng nhập: `admin`
-- Mật khẩu: `admin123`
+5. Truy cập ứng dụng tại địa chỉ: http://localhost:5000
 
-## Ghi chú
+## Sử dụng NeonDB (Cấu hình thay thế)
 
-- Nếu bạn gặp lỗi khi chạy ứng dụng, hãy kiểm tra:
-  - PostgreSQL đang chạy
-  - Thông tin kết nối trong file `.env` chính xác
-  - Cơ sở dữ liệu đã được tạo và khởi tạo đúng cách
-  - Node.js và npm được cài đặt đúng phiên bản
+Nếu bạn muốn sử dụng Neon Database thay vì PostgreSQL local:
 
-- Để build ứng dụng cho production, chạy:
-  ```
-  npm run windows:build
-  ```
+1. Thay đổi chuỗi kết nối trong file `.env`:
+   ```
+   DATABASE_URL="postgresql://neondb_owner:npg_kzRBjytS8im5@ep-blue-dream-a16miz8h-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+   SESSION_SECRET="your-secret-key"
+   ```
 
-- Để chạy ứng dụng đã build, chạy:
-  ```
-  npm run windows:start
-  ```
+2. Đảm bảo tường lửa cho phép kết nối đến endpoint của Neon Database
+
+## Đăng nhập Admin
+
+- URL: http://localhost:5000/auth
+- Tên đăng nhập: admin
+- Mật khẩu: 1
+
+## Xử lý sự cố
+
+1. **Lỗi kết nối cơ sở dữ liệu**
+   - Đảm bảo PostgreSQL đang chạy
+   - Kiểm tra thông tin kết nối trong file `.env`
+   - Kiểm tra tường lửa không chặn kết nối đến PostgreSQL
+
+2. **Lỗi không thể tạo bảng**
+   - Đảm bảo database đã được tạo
+   - Đảm bảo tài khoản PostgreSQL có quyền tạo bảng
+
+3. **Lỗi không thể khởi động ứng dụng**
+   - Kiểm tra cổng 5000 không bị chiếm bởi ứng dụng khác
+   - Kiểm tra các dependency đã được cài đặt đầy đủ
+
+4. **Không thể đăng nhập admin**
+   - Đảm bảo đã chạy script SQL để tạo tài khoản admin
+   - Kiểm tra kết nối đến cơ sở dữ liệu đang hoạt động

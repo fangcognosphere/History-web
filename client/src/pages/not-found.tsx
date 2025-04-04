@@ -1,18 +1,30 @@
 import { Button } from "@/components/ui/button";
-import { AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 import { SiteLayout } from "@/components/layout/site-layout";
 
 export default function NotFound() {
   return (
     <SiteLayout title="Không tìm thấy trang">
-      <div className="min-h-[70vh] w-full flex flex-col items-center justify-center bg-white dark:bg-gray-900 py-16">
-        <div className="text-center max-w-lg mx-auto px-4">
+      <div className="min-h-[80vh] w-full flex flex-col items-center justify-center bg-white dark:bg-gray-900 py-16">
+        <div className="text-center max-w-2xl mx-auto px-4">
           <div className="flex flex-col items-center mb-8">
-            <AlertCircle className="h-20 w-20 text-red-500 mb-4" />
-            <h1 className="text-4xl font-serif font-bold text-gray-900 dark:text-white mb-4">404 - Không tìm thấy trang</h1>
+            <div className="mb-8 relative">
+              <img 
+                src="https://files.catbox.moe/g00lh1.png" 
+                alt="Trống đồng Đông Sơn" 
+                className="h-52 w-52 opacity-90 dark:opacity-70"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-6xl font-bold text-red-600 dark:text-red-500">404</span>
+              </div>
+            </div>
+            
+            <h1 className="text-4xl font-serif font-bold text-gray-900 dark:text-white mb-4">Không tìm thấy trang</h1>
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Rất tiếc, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.
+            </p>
+            <p className="text-md italic text-gray-500 dark:text-gray-400 mt-2">
+              "Nước có nguồn thì nguồn trong mới chảy. Nhà có gốc thì cây vững mới bền" - Tục ngữ Việt Nam
             </p>
           </div>
 
@@ -30,7 +42,7 @@ export default function NotFound() {
           </div>
           
           <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Có thể bạn quan tâm:</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Khám phá các nội dung khác:</h2>
             <div className="flex flex-wrap justify-center gap-3">
               <Link href="/category/NhanVat">
                 <Button variant="link" className="text-red-600 dark:text-red-400">Nhân vật lịch sử</Button>

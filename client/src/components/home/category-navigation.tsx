@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 interface Category {
   id: string;
   name: string;
-  icon: string;
+  imageUrl: string;
   color: string;
   link: string;
   description: string;
@@ -14,7 +14,7 @@ export function CategoryNavigation() {
     {
       id: 'nhan-vat',
       name: 'Nhân Vật Lịch Sử',
-      icon: 'fas fa-user',
+      imageUrl: 'https://files.catbox.moe/bhwnlt.jpg',
       color: 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300',
       link: '/category/NhanVat',
       description: 'Khám phá những nhân vật đã làm nên lịch sử dân tộc Việt Nam qua các thời kỳ'
@@ -22,7 +22,7 @@ export function CategoryNavigation() {
     {
       id: 'su-kien',
       name: 'Sự Kiện Lịch Sử',
-      icon: 'fas fa-landmark',
+      imageUrl: 'https://files.catbox.moe/kw6h4x.jpg',
       color: 'bg-secondary-100 dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300',
       link: '/category/SuKien',
       description: 'Tìm hiểu về các sự kiện quan trọng đã định hình nên lịch sử Việt Nam'
@@ -30,7 +30,7 @@ export function CategoryNavigation() {
     {
       id: 'trieu-dai',
       name: 'Thời Kỳ Lịch Sử',
-      icon: 'fas fa-crown',
+      imageUrl: 'https://files.catbox.moe/3oi8ma.jpg',
       color: 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300',
       link: '/category/TrieuDai',
       description: 'Khám phá các thời kỳ từ thời Vua Hùng dựng nước đến nay'
@@ -49,18 +49,24 @@ export function CategoryNavigation() {
               href={category.link}
               className="block bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
             >
-              <div className="p-8 flex flex-col items-center text-center">
-                <div className={`h-20 w-20 rounded-full ${category.color} flex items-center justify-center mb-4`}>
-                  <i className={`${category.icon} text-2xl`}></i>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-full h-40 overflow-hidden">
+                  <img 
+                    src={category.imageUrl} 
+                    alt={category.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
                 </div>
-                <h3 className="text-xl font-bold mb-3">{category.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">{category.description}</p>
-                <span className="inline-flex items-center text-primary font-medium">
-                  Xem thêm
-                  <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3">{category.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">{category.description}</p>
+                  <span className="inline-flex items-center text-primary font-medium">
+                    Xem thêm
+                    <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
+                </div>
               </div>
             </Link>
           ))}
