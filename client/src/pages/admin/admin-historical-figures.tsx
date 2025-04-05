@@ -33,14 +33,14 @@ export default function AdminHistoricalFigures() {
 
   // Fetch historical figures
   const { data: figures = [], isLoading } = useQuery({
-    queryKey: ['/api/nhanvat'],
+    queryKey: ['/api/figure'],
     queryFn: getQueryFn({ on401: "throw" }),
   });
 
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const res = await fetch(`/api/nhanvat/${id}`, {
+      const res = await fetch(`/api/figure/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -57,7 +57,7 @@ export default function AdminHistoricalFigures() {
         title: "Nhân vật đã được xóa",
         description: "Nhân vật lịch sử đã được xóa thành công",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/nhanvat'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/figure'] });
       setDeleteDialogOpen(false);
     },
     onError: (error: Error) => {

@@ -2,6 +2,10 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express } from "express";
 import session from "express-session";
+import pgSession from "connect-pg-simple";
+import pg from "pg";
+const { Pool } = pg;
+
 import { storage } from "./storage";
 import { TaiKhoan } from "@shared/schema";
 
@@ -12,13 +16,31 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
+  const PgSession = pgSession(session);
+  
+  // Cách 1: Sử dụng kết nối trực tiếp với mật khẩu dạng chuỗi
+  const pool = new Pool({
+    user: "postgres",
+    password: "1", // Đảm bảo là chuỗi
+    host: "localhost",
+    port: 5432,
+    database: "LichSuVietNam"
+  });
+  
+  // Cách 2: Hoặc sử dụng chuỗi kết nối với định dạng chuẩn
+  // const connectionString = "postgresql://postgres:1@localhost:5432/LichSuVietNam";
+  // const pool = new Pool({ connectionString });
+  
   const sessionSettings: session.SessionOptions = {
+    store: new PgSession({ 
+      pool,
+      createTableIfNotExists: true 
+    }),
     secret: process.env.SESSION_SECRET || "lichsuvietnam-secret",
     resave: false,
     saveUninitialized: false,
-    store: storage.sessionStore,
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     }
   };
 

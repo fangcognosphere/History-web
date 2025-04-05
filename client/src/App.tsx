@@ -20,7 +20,7 @@ import AdminAccounts from "@/pages/admin/admin-accounts";
 import AdminHistoricalFigures from "@/pages/admin/admin-historical-figures";
 import AdminHistoricalEvents from "@/pages/admin/admin-historical-events";
 import AdminDynasties from "@/pages/admin/admin-dynasties";
-import AdminDynastyEdit from "@/pages/admin/admin-dynasty-edit"; // Đổi tên hiển thị thành "Thời kỳ" mà không đổi tên file
+import AdminDynastyEdit from "@/pages/admin/admin-dynasty-edit";
 import AdminHistoricalFigureEdit from "@/pages/admin/admin-historical-figure-edit";
 import AdminHistoricalEventEdit from "@/pages/admin/admin-historical-event-edit";
 import NotFound from "@/pages/not-found";

@@ -23,9 +23,9 @@ export default function TimelinePage() {
 
   // Fetch all periods from API
   const { data: periods = [], isLoading: isPeriodsLoading } = useQuery({
-    queryKey: ['/api/trieudai'],
+    queryKey: ['/api/dynasty'],
     queryFn: async () => {
-      const res = await fetch('/api/trieudai');
+      const res = await fetch('/api/dynasty');
       if (!res.ok) throw new Error('Failed to fetch periods');
       return res.json();
     },

@@ -13,7 +13,7 @@ export default function AdminHistoricalFigureEdit() {
   const id = params.id ? parseInt(params.id) : null;
 
   const { data: figure, isLoading, error } = useQuery({
-    queryKey: [`/api/nhanvat/${id}`],
+    queryKey: [`/api/figure/${id}`],
     queryFn: getQueryFn({ on401: "throw" }),
     enabled: isEdit && !!id,
   });

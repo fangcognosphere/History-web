@@ -7,8 +7,8 @@ import {
   nhanVatRelations, suKienRelations, trieuDaiRelations 
 } from "@shared/schema";
 
-const connectionString = process.env.DATABASE_URL || 
-  `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
+// Sử dụng chuỗi kết nối trực tiếp
+const connectionString = "postgresql://postgres:1@localhost:5432/LichSuVietNam";
 
 export const client = postgres(connectionString);
 export const db = drizzle(client, {

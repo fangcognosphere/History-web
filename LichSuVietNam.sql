@@ -117,16 +117,21 @@ SELECT setval('"TrieuDai_id_seq"', (SELECT MAX(id) FROM "TrieuDai"));
 
 -- Insert data into NhanVat
 INSERT INTO "NhanVat" ("id", "TenNhanVat", "NamSinh", "NamMat", "MoTa", "TrieuDaiId", "HinhAnh", "QueQuan") VALUES
-(1, 'Lạc Long Quân', -3000, -2800, 'Nhân vật thần thoại, con của thần Long Nữ, là cha của các vua Hùng, được xem là tổ tiên của người Việt.', 23, 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/L%E1%BA%A1c_Long_Qu%C3%A2n_-_%C3%82u_C%C6%A1.jpg/220px-L%E1%BA%A1c_Long_Qu%C3%A2n_-_%C3%82u_C%C6%A1.jpg', 'Động Đình Hồ'),
-(2, 'An Dương Vương', -257, -208, 'Tên thật là Thục Phán, là vị vua sáng lập nước Âu Lạc, xây dựng thành Cổ Loa nổi tiếng.', 24, 'https://upload.wikimedia.org/wikipedia/commons/c/cf/An_D%C6%B0%C6%A1ng_V%C6%B0%C6%A1ng.jpg', 'Thục Quốc'),
-(3, 'Hai Bà Trưng', 14, 43, 'Trưng Trắc và Trưng Nhị là hai chị em phất cờ khởi nghĩa chống lại nhà Hán, giành lại độc lập cho đất nước.', 26, 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Hai_Ba_Trung.jpg/250px-Hai_Ba_Trung.jpg', 'Mê Linh'),
-(4, 'Lý Nam Đế', 503, 548, 'Tên thật là Lý Bí, là người sáng lập ra nhà Tiền Lý, đặt tên nước là Vạn Xuân.', 28, 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Ly_Nam_De_1.jpg/220px-Ly_Nam_De_1.jpg', 'Đường Lâm'),
-(5, 'Ngô Quyền', 897, 944, 'Chiến thắng quân Nam Hán trên sông Bạch Đằng năm 938, chấm dứt 1000 năm Bắc thuộc, mở đầu thời kỳ độc lập.', 10, 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Ng%C3%B4_Quy%E1%BB%81n.jpg/250px-Ng%C3%B4_Quy%E1%BB%81n.jpg', 'Đường Lâm'),
-(6, 'Đinh Bộ Lĩnh', 924, 979, 'Thống nhất đất nước sau thời kỳ loạn 12 sứ quân, lên ngôi hoàng đế, đặt tên nước là Đại Cồ Việt.', 11, 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/King_Dinh_Tien_Hoang.jpg/220px-King_Dinh_Tien_Hoang.jpg', 'Hoa Lư'),
+(1, 'Lạc Long Quân', -3000, -2800, 'Nhân vật thần thoại, con của thần Long Nữ, là cha của các vua Hùng, được xem là tổ tiên của người Việt.', 1, 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/L%E1%BA%A1c_Long_Qu%C3%A2n_-_%C3%82u_C%C6%A1.jpg/220px-L%E1%BA%A1c_Long_Qu%C3%A2n_-_%C3%82u_C%C6%A1.jpg', 'Động Đình Hồ'),
+(2, 'An Dương Vương', -257, -208, 'Tên thật là Thục Phán, là vị vua sáng lập nước Âu Lạc, xây dựng thành Cổ Loa nổi tiếng.', 2, 'https://upload.wikimedia.org/wikipedia/commons/c/cf/An_D%C6%B0%C6%A1ng_V%C6%B0%C6%A1ng.jpg', 'Thục Quốc'),
+(3, 'Hai Bà Trưng', 14, 43, 'Trưng Trắc và Trưng Nhị là hai chị em phất cờ khởi nghĩa chống lại nhà Hán, giành lại độc lập cho đất nước.', 4, 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Hai_Ba_Trung.jpg/250px-Hai_Ba_Trung.jpg', 'Mê Linh'),
+(4, 'Lý Nam Đế', 503, 548, 'Tên thật là Lý Bí, là người sáng lập ra nhà Tiền Lý, đặt tên nước là Vạn Xuân.', 6, 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Ly_Nam_De_1.jpg/220px-Ly_Nam_De_1.jpg', 'Đường Lâm'),
+(5, 'Ngô Quyền', 897, 944, 'Chiến thắng quân Nam Hán trên sông Bạch Đằng năm 938, chấm dứt 1000 năm Bắc thuộc, mở đầu thời kỳ độc lập.', 9, 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Ng%C3%B4_Quy%E1%BB%81n.jpg/250px-Ng%C3%B4_Quy%E1%BB%81n.jpg', 'Đường Lâm'),
+(6, 'Đinh Bộ Lĩnh', 924, 979, 'Thống nhất đất nước sau thời kỳ loạn 12 sứ quân, lên ngôi hoàng đế, đặt tên nước là Đại Cồ Việt.', 10, 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/King_Dinh_Tien_Hoang.jpg/220px-King_Dinh_Tien_Hoang.jpg', 'Hoa Lư'),
 (7, 'Lý Thái Tổ', 974, 1028, 'Tên thật là Lý Công Uẩn, là vị hoàng đế đầu tiên của nhà Lý, dời đô về Thăng Long (Hà Nội ngày nay).', 12, 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/LyThaiTo.jpg/220px-LyThaiTo.jpg', 'Cổ Pháp'),
 (8, 'Lý Thường Kiệt', 1019, 1105, 'Danh tướng thời Lý, chỉ huy quân đội đánh bại quân Tống, tác giả bài thơ "Nam quốc sơn hà".', 12, 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/LyThuongKiet.PNG/200px-LyThuongKiet.PNG', 'Thăng Long'),
 (9, 'Trần Hưng Đạo', 1228, 1300, 'Tên thật là Trần Quốc Tuấn, là nhà quân sự thiên tài, chỉ huy quân đội đánh thắng quân Nguyên Mông ba lần.', 13, 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Tran_Hung_Dao.jpg/220px-Tran_Hung_Dao.jpg', 'Tức Mặc'),
-(10, 'Lê Lợi', 1385, 1433, 'Người lãnh đạo khởi nghĩa Lam Sơn, đánh đuổi quân Minh, lập nên triều đại nhà Hậu Lê.', 19, 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Le_Thai_To.jpg/220px-Le_Thai_To.jpg', 'Lam Sơn');
+(10, 'Lê Lợi', 1385, 1433, 'Người lãnh đạo khởi nghĩa Lam Sơn, đánh đuổi quân Minh, lập nên triều đại nhà Hậu Lê.', 16, 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Le_Thai_To.jpg/220px-Le_Thai_To.jpg', 'Lam Sơn');
+
+-- Update NhanVat to use valid TrieuDaiId values
+UPDATE "NhanVat" SET "TrieuDaiId" = 1 WHERE "id" = 1; -- Lạc Long Quân -> Thời kỳ Hồng Bàng
+UPDATE "NhanVat" SET "TrieuDaiId" = 2 WHERE "id" = 2; -- An Dương Vương -> Thời kỳ Thục Phán
+UPDATE "NhanVat" SET "TrieuDaiId" = 4 WHERE "id" = 3; -- Hai Bà Trưng -> Thời kỳ Trưng Nữ Vương
 
 -- Reset sequences
 SELECT setval('"NhanVat_id_seq"', (SELECT MAX(id) FROM "NhanVat"));

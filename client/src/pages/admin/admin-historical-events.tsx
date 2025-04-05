@@ -33,14 +33,14 @@ export default function AdminHistoricalEvents() {
 
   // Fetch historical events
   const { data: events = [], isLoading } = useQuery({
-    queryKey: ['/api/sukien'],
+    queryKey: ['/api/event'],
     queryFn: getQueryFn({ on401: "throw" }),
   });
 
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const res = await fetch(`/api/sukien/${id}`, {
+      const res = await fetch(`/api/event/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -57,7 +57,7 @@ export default function AdminHistoricalEvents() {
         title: "Sự kiện đã được xóa",
         description: "Sự kiện lịch sử đã được xóa thành công",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/sukien'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/event'] });
       setDeleteDialogOpen(false);
     },
     onError: (error: Error) => {

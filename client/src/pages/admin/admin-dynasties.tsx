@@ -33,14 +33,14 @@ export default function AdminDynasties() {
 
   // Fetch dynasties
   const { data: dynasties = [], isLoading } = useQuery({
-    queryKey: ['/api/trieudai'],
+    queryKey: ['/api/dynasty'],
     queryFn: getQueryFn({ on401: "throw" }),
   });
 
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const res = await fetch(`/api/trieudai/${id}`, {
+      const res = await fetch(`/api/dynasty/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -57,7 +57,7 @@ export default function AdminDynasties() {
         title: "Thời kỳ đã được xóa",
         description: "Thời kỳ đã được xóa thành công",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/trieudai'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dynasty'] });
       setDeleteDialogOpen(false);
     },
     onError: (error: Error) => {

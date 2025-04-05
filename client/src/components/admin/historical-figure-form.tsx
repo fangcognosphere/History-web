@@ -51,7 +51,7 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
 
   // Fetch dynasties for dropdown
   const { data: dynasties = [] } = useQuery({
-    queryKey: ['/api/trieudai'],
+    queryKey: ['/api/dynasty'],
     queryFn: getQueryFn({ on401: "throw" }),
   });
 
@@ -77,7 +77,7 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
-      const res = await fetch('/api/nhanvat', {
+      const res = await fetch('/api/figure', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -96,7 +96,7 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
         title: 'Nhân vật đã được tạo',
         description: 'Nhân vật lịch sử đã được tạo thành công',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/nhanvat'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/figure'] });
       navigate('/admin/historical-figures');
     },
     onError: (error: Error) => {
@@ -111,7 +111,7 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormValues }) => {
-      const res = await fetch(`/api/nhanvat/${id}`, {
+      const res = await fetch(`/api/figure/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -130,7 +130,7 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
         title: 'Nhân vật đã được cập nhật',
         description: 'Nhân vật lịch sử đã được cập nhật thành công',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/nhanvat'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/figure'] });
       navigate('/admin/historical-figures');
     },
     onError: (error: Error) => {

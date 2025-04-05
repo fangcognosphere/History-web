@@ -1,6 +1,14 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+console.log('Biến môi trường:', {
+  DATABASE_URL: process.env.DATABASE_URL,
+  SESSION_SECRET: process.env.SESSION_SECRET
+});
 
 const app = express();
 app.use(express.json());
@@ -47,18 +55,17 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // Quan trọng: Đảm bảo rằng bạn đã cấu hình CORS đúng cách để cho phép truy cập từ các nguồn khác nhau nếu cần thiết.
+  // Thiết lập CORS cho tất cả các nguồn (không an toàn cho sản phẩm)
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
+  // Luôn lắng nghe trên localhost:5000 cho đến khi có yêu cầu khác.
+  // Chúng tôi không sử dụng HTTPS trong môi trường phát triển, vì vậy hãy sử dụng http.
+  // Cả hai máy chủ và client đều lắng nghe trên cùng một cổng, vì vậy chúng tôi không cần phải thay đổi cổng trong môi trường phát triển.
   const port = 5000;
   server.listen({
     port,

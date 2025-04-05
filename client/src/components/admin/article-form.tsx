@@ -38,19 +38,19 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
   
   // Get historical figures for dropdown
   const { data: nhanVats = [] } = useQuery({
-    queryKey: ['/api/nhanvat'],
+    queryKey: ['/api/figure'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Get historical events for dropdown
   const { data: suKiens = [] } = useQuery({
-    queryKey: ['/api/sukien'],
+    queryKey: ['/api/event'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Get historical dynasties for dropdown
   const { data: trieuDais = [] } = useQuery({
-    queryKey: ['/api/trieudai'],
+    queryKey: ['/api/dynasty'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 

@@ -59,7 +59,7 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
-      const res = await fetch('/api/trieudai', {
+      const res = await fetch('/api/dynasty', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -78,7 +78,7 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
         title: 'Thời kỳ đã được tạo',
         description: 'Thời kỳ đã được tạo thành công',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/trieudai'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dynasty'] });
       navigate('/admin/dynasties');
     },
     onError: (error: Error) => {
@@ -93,7 +93,7 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormValues }) => {
-      const res = await fetch(`/api/trieudai/${id}`, {
+      const res = await fetch(`/api/dynasty/${id}`, { 
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -112,7 +112,7 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
         title: 'Thời kỳ đã được cập nhật',
         description: 'Thời kỳ đã được cập nhật thành công',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/trieudai'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dynasty'] });
       navigate('/admin/dynasties');
     },
     onError: (error: Error) => {

@@ -13,7 +13,7 @@ export default function AdminDynastyEdit() {
   const id = params.id ? parseInt(params.id) : null;
 
   const { data: dynasty, isLoading, error } = useQuery({
-    queryKey: [`/api/trieudai/${id}`],
+    queryKey: [`/api/dynasty/${id}`],
     queryFn: getQueryFn({ on401: "throw" }),
     enabled: isEdit && !!id,
   });

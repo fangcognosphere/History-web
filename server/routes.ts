@@ -115,8 +115,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(201).json(newArticle);
     } catch (error) {
-      console.error("Create article error:", error);
-      res.status(500).json({ error: "Failed to create article" });
+      console.error("Lỗi tạo bài viết:", error);
+      res.status(500).json({ error: "Không thể tạo bài viết" });
     }
   });
 
@@ -127,7 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const article = await storage.getBaiViet(id);
       if (!article) {
-        return res.status(404).json({ error: "Article not found" });
+        return res.status(404).json({ error: "Không tìm thấy bài viết" });
       }
 
       // Check if admin
@@ -174,11 +174,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Article not found" });
       }
 
-      // Check if admin
+      // Check nếu là admin
       if (article.taiKhoanId !== req.user?.id) {
         return res.status(403).json({ error: "Unauthorized" });
       }
-
+      
       // Xóa bài viết từ cơ sở dữ liệu
       // Lưu ý: Catbox không hỗ trợ xóa file trực tiếp mà không có user hash
       await storage.deleteBaiViet(id);
@@ -202,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/image", upload.single("image"), async (req, res) => {
     try {
       if (!req.file) {
-        return res.status(400).json({ error: "No image uploaded" });
+        return res.status(400).json({ error: "Chưa tải hình ảnh lên" });
       }
       
       const { tieuDe, moTa, baiVietId } = req.body;
@@ -225,7 +225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(201).json(newImage);
     } catch (error) {
-      res.status(500).json({ error: "Failed to upload image" });
+      res.status(500).json({ error: "Lỗi khi tải ảnh lên!" });
     }
   });
 
@@ -235,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const image = await storage.getHinhAnh(id);
       
       if (!image) {
-        return res.status(404).json({ error: "Image not found" });
+        return res.status(404).json({ error: "Không tìm thấy ảnh" });
       }
       
       const { tieuDe, moTa, baiVietId } = req.body;
@@ -246,8 +246,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         try {
           duongDan = await catboxUploader.uploadFromMulter(req.file);
         } catch (uploadError) {
-          console.error("Upload to Catbox failed:", uploadError);
-          return res.status(500).json({ error: "Failed to upload image to Catbox" });
+          console.error("Tải lên Catbox lỗi:", uploadError);
+          return res.status(500).json({ error: "Lỗi khi tải ảnh lên Catbox" });
         }
       }
       
@@ -398,6 +398,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/figure/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const figure = await storage.getNhanVat(id);
+      if (!figure) {
+        return res.status(404).json({ error: "Historical figure not found" });
+      }
+      res.json(figure);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch historical figure" });
+    }
+  });
+
+  app.post("/api/figure", async (req, res) => {
+    try {
+      const figure = await storage.createNhanVat(req.body);
+      res.status(201).json(figure);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create historical figure" });
+    }
+  });
+
+  app.patch("/api/figure/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const figure = await storage.updateNhanVat(id, req.body);
+      if (!figure) {
+        return res.status(404).json({ error: "Historical figure not found" });
+      }
+      res.json(figure);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update historical figure" });
+    }
+  });
+
+  app.delete("/api/figure/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const figure = await storage.getNhanVat(id);
+      
+      if (!figure) {
+        return res.status(404).json({ error: "Historical figure not found" });
+      }
+      
+      await storage.deleteNhanVat(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete historical figure" });
+    }
+  });
+
   // Get historical events
   app.get("/api/event", async (req, res) => {
     try {
@@ -410,26 +461,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Account management (for admin)
+  // Quản lý tài khoản (dành cho quản trị viên)
   app.get("/api/account", async (req, res) => {
     try {
-      // Verify if current user is admin
-      const currentUser = req.user;
-      if (!currentUser || currentUser.vaiTro !== 'Admin') {
-        return res.status(403).json({ error: "Unauthorized: Admin access required" });
+      // Kiểm tra xem người dùng hiện tại có phải là quản trị viên không
+      const nguoiDungHienTai = req.user;
+      if (!nguoiDungHienTai || nguoiDungHienTai.vaiTro !== 'Admin') {
+        return res.status(403).json({ error: "Không được phép: Yêu cầu quyền quản trị viên" });
       }
 
-      // Get all accounts
-      const accounts = await storage.getAllTaiKhoans();
-      // Remove password field for security
-      const safeAccounts = accounts.map(account => {
-        const { password, ...safeAccount } = account;
-        return safeAccount;
+      // Lấy tất cả tài khoản
+      const danhSachTaiKhoan = await storage.getAllTaiKhoans();
+      // Loại bỏ trường mật khẩu để bảo mật
+      const taiKhoanAnToan = danhSachTaiKhoan.map(taiKhoan => {
+        const { password, ...thongTinTaiKhoan } = taiKhoan;
+        return thongTinTaiKhoan;
       });
       
-      res.json(safeAccounts);
+      res.json(taiKhoanAnToan);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch accounts" });
+      res.status(500).json({ error: "Không thể lấy danh sách tài khoản" });
     }
   });
 
@@ -437,7 +488,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       
-      // Verify if current user is admin
+      // Xác minh xem người dùng hiện tại có phải là admin không
+      // Nếu không phải admin thì về 404
       const currentUser = req.user;
       if (!currentUser || currentUser.vaiTro !== 'Admin') {
         return res.status(403).json({ error: "Unauthorized: Admin access required" });
@@ -485,7 +537,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const updatedAccount = await storage.updateTaiKhoan(id, updateData);
       
-      // Remove password field for security
+      // Loại bỏ mật khẩu khỏi phản hồi để bảo mật
       const { password: pwd, ...safeAccount } = updatedAccount!;
       
       res.json(safeAccount);
@@ -494,7 +546,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create HTTP server
+  // Tạo server HTTP mới
   const httpServer = createServer(app);
 
   return httpServer;

@@ -13,7 +13,7 @@ export default function AdminHistoricalEventEdit() {
   const id = params.id ? parseInt(params.id) : null;
 
   const { data: event, isLoading, error } = useQuery({
-    queryKey: [`/api/sukien/${id}`],
+    queryKey: [`/api/event/${id}`],
     queryFn: getQueryFn({ on401: "throw" }),
     enabled: isEdit && !!id,
   });

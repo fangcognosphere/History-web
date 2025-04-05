@@ -18,9 +18,9 @@ export function TimelineSection() {
   
   // Fetch triều đại data from API
   const { data: dynasties = [], isLoading: isDynastiesLoading } = useQuery({
-    queryKey: ['/api/trieudai'],
+    queryKey: ['/api/dynasty'],
     queryFn: async () => {
-      const res = await fetch('/api/trieudai');
+      const res = await fetch('/api/dynasty');
       if (!res.ok) throw new Error('Failed to fetch dynasties');
       return res.json();
     },

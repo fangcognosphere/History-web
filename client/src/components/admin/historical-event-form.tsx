@@ -51,7 +51,7 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
 
   // Fetch dynasties for dropdown
   const { data: dynasties = [] } = useQuery({
-    queryKey: ['/api/trieudai'],
+    queryKey: ['/api/dynasty'],
     queryFn: getQueryFn({ on401: "throw" }),
   });
 
@@ -77,7 +77,7 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
-      const res = await fetch('/api/sukien', {
+      const res = await fetch('/api/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -96,7 +96,7 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
         title: 'Sự kiện đã được tạo',
         description: 'Sự kiện lịch sử đã được tạo thành công',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/sukien'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/event'] });
       navigate('/admin/historical-events');
     },
     onError: (error: Error) => {
@@ -111,7 +111,7 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormValues }) => {
-      const res = await fetch(`/api/sukien/${id}`, {
+      const res = await fetch(`/api/event/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -130,7 +130,7 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
         title: 'Sự kiện đã được cập nhật',
         description: 'Sự kiện lịch sử đã được cập nhật thành công',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/sukien'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/event'] });
       navigate('/admin/historical-events');
     },
     onError: (error: Error) => {
