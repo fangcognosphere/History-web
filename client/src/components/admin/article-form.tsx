@@ -22,6 +22,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 // Extend schema for client-side validation
 const formSchema = insertBaiVietSchema.extend({
   anhDaiDien: z.any().optional(),
+  tomTat: z.string().optional(),
+  nhanVatId: z.union([z.string(), z.number()]).optional().nullable(),
+  suKienId: z.union([z.string(), z.number()]).optional().nullable(),
+  trieuDaiId: z.union([z.string(), z.number()]).optional().nullable(),
+  thoiGianDoc: z.union([z.string(), z.number()]).default(5),
+  noiBat: z.boolean().default(false),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -31,25 +37,41 @@ interface ArticleFormProps {
   isEdit?: boolean;
 }
 
+// Define types for API responses
+interface NhanVat {
+  id: number;
+  tenNhanVat: string;
+}
+
+interface SuKien {
+  id: number;
+  tenSuKien: string;
+}
+
+interface TrieuDai {
+  id: number;
+  tenTrieuDai: string;
+}
+
 export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   
   // Get historical figures for dropdown
-  const { data: nhanVats = [] } = useQuery({
+  const { data: nhanVats = [] } = useQuery<NhanVat[]>({
     queryKey: ['/api/figure'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Get historical events for dropdown
-  const { data: suKiens = [] } = useQuery({
+  const { data: suKiens = [] } = useQuery<SuKien[]>({
     queryKey: ['/api/event'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   // Get historical dynasties for dropdown
-  const { data: trieuDais = [] } = useQuery({
+  const { data: trieuDais = [] } = useQuery<TrieuDai[]>({
     queryKey: ['/api/dynasty'],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
@@ -199,10 +221,14 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                     <FormItem>
                       <FormLabel>Tóm tắt</FormLabel>
                       <FormControl>
-                        <Textarea 
+                        <Textarea
                           placeholder="Nhập tóm tắt nội dung" 
                           className="resize-none h-24" 
-                          {...field} 
+                          value={field.value || ''} 
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                         />
                       </FormControl>
                       <FormMessage />
@@ -279,7 +305,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {nhanVats.map((nhanVat: any) => (
+                            {nhanVats && Array.isArray(nhanVats) && (nhanVats as NhanVat[]).map((nhanVat) => (
                               <SelectItem key={nhanVat.id} value={nhanVat.id.toString()}>
                                 {nhanVat.tenNhanVat}
                               </SelectItem>
@@ -309,7 +335,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {suKiens.map((suKien: any) => (
+                            {suKiens && Array.isArray(suKiens) && (suKiens as SuKien[]).map((suKien) => (
                               <SelectItem key={suKien.id} value={suKien.id.toString()}>
                                 {suKien.tenSuKien}
                               </SelectItem>
@@ -339,7 +365,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {trieuDais.map((trieuDai: any) => (
+                            {trieuDais && Array.isArray(trieuDais) && (trieuDais as TrieuDai[]).map((trieuDai) => (
                               <SelectItem key={trieuDai.id} value={trieuDai.id.toString()}>
                                 {trieuDai.tenTrieuDai}
                               </SelectItem>
@@ -363,8 +389,11 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                           type="number" 
                           min="1" 
                           max="60" 
-                          {...field} 
+                          value={field.value || 5}
                           onChange={e => field.onChange(parseInt(e.target.value) || 5)} 
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                         />
                       </FormControl>
                       <FormMessage />
@@ -385,7 +414,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                       </div>
                       <FormControl>
                         <Switch
-                          checked={field.value}
+                          checked={!!field.value}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>

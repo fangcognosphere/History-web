@@ -474,7 +474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const danhSachTaiKhoan = await storage.getAllTaiKhoans();
       // Loại bỏ trường mật khẩu để bảo mật
       const taiKhoanAnToan = danhSachTaiKhoan.map(taiKhoan => {
-        const { password, ...thongTinTaiKhoan } = taiKhoan;
+        const { matKhau, ...thongTinTaiKhoan } = taiKhoan;
         return thongTinTaiKhoan;
       });
       
@@ -538,7 +538,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updatedAccount = await storage.updateTaiKhoan(id, updateData);
       
       // Loại bỏ mật khẩu khỏi phản hồi để bảo mật
-      const { password: pwd, ...safeAccount } = updatedAccount!;
+      const { matKhau: pwd, ...safeAccount } = updatedAccount!;
       
       res.json(safeAccount);
     } catch (error) {

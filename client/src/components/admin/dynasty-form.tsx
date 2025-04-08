@@ -21,11 +21,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
-// Extend the schema with form-specific validation
+// Modify the schema to ensure proper types
 const formSchema = insertTrieuDaiSchema.extend({
   moTa: z.string().optional(),
-  batDau: z.string().optional().transform(val => val ? parseInt(val) : null),
-  ketThuc: z.string().optional().transform(val => val ? parseInt(val) : null),
+  batDau: z.string().optional(),
+  ketThuc: z.string().optional(),
   kinhDo: z.string().optional(),
 });
 
@@ -59,10 +59,17 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
+      // Convert string values to numbers before sending to API
+      const processedData = {
+        ...data,
+        batDau: data.batDau ? parseInt(data.batDau) : null,
+        ketThuc: data.ketThuc ? parseInt(data.ketThuc) : null,
+      };
+      
       const res = await fetch('/api/dynasty', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(processedData),
         credentials: 'include',
       });
       
@@ -90,13 +97,20 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
     },
   });
   
-  // Update mutation
+  // Update mutation - also needs the same processing
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormValues }) => {
+      // Convert string values to numbers before sending to API
+      const processedData = {
+        ...data,
+        batDau: data.batDau ? parseInt(data.batDau) : null,
+        ketThuc: data.ketThuc ? parseInt(data.ketThuc) : null,
+      };
+      
       const res = await fetch(`/api/dynasty/${id}`, { 
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(processedData),
         credentials: 'include',
       });
       
@@ -200,13 +214,13 @@ export function DynastyForm({ initialData, isEdit = false }: DynastyFormProps) {
           control={form.control}
           name="moTa"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Mô tả</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Nhập mô tả về thời kỳ này" 
-                  className="min-h-[120px]" 
-                  {...field} 
+                <Textarea
+                  placeholder="Nhập mô tả về thời kỳ này"
+                  className="min-h-[200px]"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />

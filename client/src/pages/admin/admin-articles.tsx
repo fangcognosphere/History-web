@@ -37,6 +37,17 @@ import {
 import { queryClient, getQueryFn } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
+// Add a type definition for Article
+interface Article {
+  id: number;
+  tieuDe: string;
+  danhMuc: string;
+  ngayDang: string;
+  luotXem: number;
+  noiBat: boolean;
+  tomTat?: string;
+}
+
 export default function AdminArticles() {
   const [filter, setFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -45,8 +56,8 @@ export default function AdminArticles() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
 
-  // Fetch articles
-  const { data: articles = [], isLoading } = useQuery({
+  // Fetch articles with the correct type
+  const { data: articles = [], isLoading } = useQuery<Article[]>({
     queryKey: ['/api/article'],
     queryFn: getQueryFn({ on401: "throw" }),
   });
@@ -84,14 +95,16 @@ export default function AdminArticles() {
   });
 
   // Filter articles based on category and search query
-  const filteredArticles = articles.filter((article: any) => {
-    const matchesCategory = filter === 'all' || article.danhMuc === filter;
-    const matchesSearch = searchQuery === '' || 
-      article.tieuDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (article.tomTat && article.tomTat.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    return matchesCategory && matchesSearch;
-  });
+  const filteredArticles = Array.isArray(articles) 
+    ? articles.filter((article: Article) => {
+        const matchesCategory = filter === 'all' || article.danhMuc === filter;
+        const matchesSearch = searchQuery === '' || 
+          article.tieuDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (article.tomTat && article.tomTat.toLowerCase().includes(searchQuery.toLowerCase()));
+        
+        return matchesCategory && matchesSearch;
+      })
+    : [];
 
   // Handle delete article
   const handleDeleteClick = (id: number) => {
@@ -202,7 +215,7 @@ export default function AdminArticles() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredArticles.map((article: any) => (
+                filteredArticles.map((article: Article) => (
                   <TableRow key={article.id}>
                     <TableCell>{article.id}</TableCell>
                     <TableCell className="font-medium">{article.tieuDe}</TableCell>

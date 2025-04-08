@@ -31,9 +31,9 @@ import {
 // Extend the schema with form-specific validation
 const formSchema = insertNhanVatSchema.extend({
   moTa: z.string().optional(),
-  namSinh: z.string().optional().transform(val => val ? parseInt(val) : null),
-  namMat: z.string().optional().transform(val => val ? parseInt(val) : null),
-  trieuDaiId: z.string().optional().transform(val => val ? parseInt(val) : null),
+  namSinh: z.string().optional(),
+  namMat: z.string().optional(),
+  trieuDaiId: z.string().optional(),
   queQuan: z.string().optional(),
   ghiChu: z.string().optional(),
 });
@@ -77,10 +77,18 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
+      // Convert string values to numbers before sending to API
+      const processedData = {
+        ...data,
+        namSinh: data.namSinh ? parseInt(data.namSinh) : null,
+        namMat: data.namMat ? parseInt(data.namMat) : null,
+        trieuDaiId: data.trieuDaiId ? parseInt(data.trieuDaiId) : null,
+      };
+      
       const res = await fetch('/api/figure', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(processedData),
         credentials: 'include',
       });
       
@@ -111,10 +119,18 @@ export function HistoricalFigureForm({ initialData, isEdit = false }: Historical
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormValues }) => {
+      // Convert string values to numbers before sending to API
+      const processedData = {
+        ...data,
+        namSinh: data.namSinh ? parseInt(data.namSinh) : null,
+        namMat: data.namMat ? parseInt(data.namMat) : null,
+        trieuDaiId: data.trieuDaiId ? parseInt(data.trieuDaiId) : null,
+      };
+      
       const res = await fetch(`/api/figure/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(processedData),
         credentials: 'include',
       });
       

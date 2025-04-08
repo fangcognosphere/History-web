@@ -34,7 +34,7 @@ export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
     store: new PgSession({ 
       pool,
-      createTableIfNotExists: true 
+      tableName: 'session'
     }),
     secret: process.env.SESSION_SECRET || "lichsuvietnam-secret",
     resave: false,

@@ -31,9 +31,9 @@ import {
 // Extend the schema with form-specific validation
 const formSchema = insertSuKienSchema.extend({
   moTa: z.string().optional(),
-  namBatDau: z.string().optional().transform(val => val ? parseInt(val) : null),
-  namKetThuc: z.string().optional().transform(val => val ? parseInt(val) : null),
-  trieuDaiId: z.string().optional().transform(val => val ? parseInt(val) : null),
+  namBatDau: z.string().optional(),
+  namKetThuc: z.string().optional(),
+  trieuDaiId: z.string().optional(),
   diaDiem: z.string().optional(),
   ghiChu: z.string().optional(),
 });
@@ -77,10 +77,18 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (data: FormValues) => {
+      // Convert string values to numbers before sending to API
+      const processedData = {
+        ...data,
+        namBatDau: data.namBatDau ? parseInt(data.namBatDau) : null,
+        namKetThuc: data.namKetThuc ? parseInt(data.namKetThuc) : null,
+        trieuDaiId: data.trieuDaiId ? parseInt(data.trieuDaiId) : null,
+      };
+      
       const res = await fetch('/api/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(processedData),
         credentials: 'include',
       });
       
@@ -111,10 +119,18 @@ export function HistoricalEventForm({ initialData, isEdit = false }: HistoricalE
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: FormValues }) => {
+      // Convert string values to numbers before sending to API
+      const processedData = {
+        ...data,
+        namBatDau: data.namBatDau ? parseInt(data.namBatDau) : null,
+        namKetThuc: data.namKetThuc ? parseInt(data.namKetThuc) : null,
+        trieuDaiId: data.trieuDaiId ? parseInt(data.trieuDaiId) : null,
+      };
+      
       const res = await fetch(`/api/event/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(processedData),
         credentials: 'include',
       });
       
