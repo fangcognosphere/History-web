@@ -43,7 +43,7 @@ export function NewsletterSignup() {
             </div>
             <Button 
               type="submit" 
-              className="bg-white text-primary-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap"
+              className="bg-white text-primary hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition-colors whitespace-nowrap"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Đang đăng ký...' : 'Đăng Ký'}

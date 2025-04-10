@@ -46,7 +46,8 @@ export default function TimelinePage() {
     return 'from-purple-600 to-purple-400';
   };
 
-  const formatYear = (year: number): string => {
+  const formatYear = (year: number | null | undefined): string => {
+    if (year === null || year === undefined) return 'Không rõ';
     if (year < 0) return `${Math.abs(year)} TCN`;
     return year.toString();
   };

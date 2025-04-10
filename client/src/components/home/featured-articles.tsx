@@ -17,7 +17,7 @@ export function FeaturedArticles() {
     <section id="featured" className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-800 dark:text-white">Bài Viết Nổi Bật</h2>
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-primary">Bài Viết Nổi Bật</h2>
           <Link href="/category/all" className="text-primary dark:text-primary hover:underline font-medium">
             Xem tất cả
           </Link>

@@ -44,7 +44,7 @@ export function CategoryNavigation() {
   return (
     <section id="featured" className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-10 text-center">
+        <h2 className="text-primary sm:text-4xl font-serif font-bold mb-10 text-center">
           Khám Phá Lịch Sử Việt Nam
         </h2>
 

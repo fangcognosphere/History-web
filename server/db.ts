@@ -19,9 +19,8 @@ export const db = drizzle(client, {
     suKien,
     trieuDai,
     hinhAnh,
-    video
-  },
-  relationSchema: {
+    video,
+    // Định nghĩa các bảng trong cơ sở dữ liệu
     baiVietRelations,
     hinhAnhRelations,
     videoRelations,

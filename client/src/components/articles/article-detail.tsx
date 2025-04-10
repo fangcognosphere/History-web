@@ -161,7 +161,7 @@ export function ArticleDetail({ id }: ArticleDetailProps) {
           {/* Featured image */}
           {article.anhDaiDien && (
             <div className="mb-8">
-              <figure className="rounded-lg overflow-hidden">
+              <figure className="rounded-lg overflow-hidden shadow-lg">
                 <img 
                   src={article.anhDaiDien} 
                   alt={article.tieuDe}

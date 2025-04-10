@@ -14,7 +14,7 @@ import {
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 
-const PostgresSessionStore = connectPg(session);
+const PgSessionStore = connectPg(session);
 
 export interface IStorage {
   // Authentication
@@ -72,14 +72,14 @@ export interface IStorage {
   deleteTrieuDai(id: number): Promise<boolean>;
 
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: session.Store;
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: session.Store;
 
   constructor() {
-    this.sessionStore = new PostgresSessionStore({
+    this.sessionStore = new PgSessionStore({
       conObject: {
         connectionString: process.env.DATABASE_URL,
       },
@@ -214,8 +214,8 @@ export class DatabaseStorage implements IStorage {
 
   // Videos
   async getVideo(id: number): Promise<Video | undefined> {
-    const [video] = await db.select().from(video).where(eq(video.id, id));
-    return video;
+    const [videoRecord] = await db.select().from(video).where(eq(video.id, id));
+    return videoRecord;
   }
 
   async getVideosByBaiVietId(baiVietId: number): Promise<Video[]> {

@@ -29,20 +29,38 @@ export function TimelineSection() {
   // Transform data into timeline events
   useEffect(() => {
     if (dynasties.length > 0 && !isDynastiesLoading) {
-      // Get a subset of the most significant periods
-      const significantDynasties = dynasties
-        .sort((a: any, b: any) => a.BatDau - b.BatDau)
-        .filter((_: any, index: number) => index % 2 === 0) // Take every other dynasty to reduce density
-        .slice(0, 6); // Limit to 6 events for the homepage
-      
-      const events: TimelineEvent[] = significantDynasties.map((dynasty: any, index: number) => ({
-        year: `${dynasty.BatDau}${dynasty.KetThuc ? ` - ${dynasty.KetThuc}` : ''}`,
-        content: dynasty.TenTrieuDai,
-        position: index % 2 === 0 ? 'left' : 'right'
-      }));
-      
-      setTimelineEvents(events);
-      setLoading(false);
+      try {
+        // Get a subset of the most significant periods
+        const significantDynasties = dynasties
+          .filter((dynasty: any) => dynasty && dynasty.TenTrieuDai) // Đảm bảo dữ liệu hợp lệ
+          .sort((a: any, b: any) => (a.BatDau || 0) - (b.BatDau || 0))
+          .filter((_: any, index: number) => index % 2 === 0) // Take every other dynasty to reduce density
+          .slice(0, 6); // Limit to 6 events for the homepage
+        
+        const events: TimelineEvent[] = significantDynasties.map((dynasty: any, index: number) => {
+          // Format năm bắt đầu và kết thúc an toàn
+          const startYear = dynasty.BatDau !== null && dynasty.BatDau !== undefined 
+            ? dynasty.BatDau
+            : 'Không rõ';
+            
+          const endYear = dynasty.KetThuc !== null && dynasty.KetThuc !== undefined
+            ? ` - ${dynasty.KetThuc}`
+            : '';
+            
+          return {
+            year: `${startYear}${endYear}`,
+            content: dynasty.TenTrieuDai || 'Không có tên',
+            position: index % 2 === 0 ? 'left' : 'right'
+          };
+        });
+        
+        setTimelineEvents(events);
+        setLoading(false);
+      } catch (err) {
+        console.error('Lỗi xử lý dữ liệu timeline:', err);
+        setError('Không thể hiển thị dòng thời gian');
+        setLoading(false);
+      }
     }
   }, [dynasties, isDynastiesLoading]);
 
@@ -111,7 +129,7 @@ export function TimelineSection() {
   return (
     <section id="timeline" className="py-16 bg-gray-50 dark:bg-gray-800" ref={timelineRef}>
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-10 text-center">Dòng Thời Gian Lịch Sử</h2>
+        <h2 className="text-primary sm:text-4xl font-serif font-bold mb-10 text-center">Dòng Thời Gian Lịch Sử</h2>
         
         {isDynastiesLoading || loading ? (
           <div className="flex justify-center items-center h-60">
