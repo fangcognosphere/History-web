@@ -17,3 +17,29 @@ export function useIsMobile() {
 
   return !!isMobile
 }
+
+// Add useMediaQuery function to handle any media query
+export function useMediaQuery(query: string) {
+  const [matches, setMatches] = React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia(query)
+    
+    const handleChange = () => {
+      setMatches(mediaQuery.matches)
+    }
+    
+    // Set initial value
+    handleChange()
+    
+    // Add event listener
+    mediaQuery.addEventListener("change", handleChange)
+    
+    // Clean up
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange)
+    }
+  }, [query])
+
+  return matches
+}

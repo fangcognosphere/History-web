@@ -58,6 +58,7 @@ export const baiViet = pgTable("BaiViet", {
   anhDaiDien: text("AnhDaiDien"),
   luotXem: integer("LuotXem").default(0),
   noiBat: boolean("NoiBat").default(false),
+  namXayRa: integer("NamXayRa"), // Thêm trường năm xảy ra
   ngayDang: timestamp("NgayDang").defaultNow(),
   thoiGianDoc: integer("ThoiGianDoc").default(5), // Read time in minutes
   taiKhoanId: integer("TaiKhoanId").references(() => taiKhoan.id),

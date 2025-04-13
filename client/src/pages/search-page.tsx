@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useSearch, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { SiteLayout } from '@/components/layout/site-layout';
 import { ArticleGrid } from '@/components/articles/article-grid';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
+import { withPageLoading } from '@/hooks/with-page-loading';
 
-export default function SearchPage() {
-  const [search] = useSearch();
+function SearchPage() {
   const [, navigate] = useLocation();
-  const searchParams = new URLSearchParams(search);
+  // Get the search query from the URL
+  const searchParams = new URLSearchParams(window.location.search);
   const query = searchParams.get('q') || '';
   const [searchInput, setSearchInput] = useState(query);
   const [page, setPage] = useState(1);
@@ -108,3 +109,5 @@ export default function SearchPage() {
     </SiteLayout>
   );
 }
+
+export default withPageLoading(SearchPage);

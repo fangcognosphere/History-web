@@ -26,6 +26,7 @@ const formSchema = insertBaiVietSchema.extend({
   nhanVatId: z.union([z.string(), z.number()]).optional().nullable(),
   suKienId: z.union([z.string(), z.number()]).optional().nullable(),
   trieuDaiId: z.union([z.string(), z.number()]).optional().nullable(),
+  namXayRa: z.union([z.string(), z.number()]).optional().nullable(),
   thoiGianDoc: z.union([z.string(), z.number()]).default(5),
   noiBat: z.boolean().default(false),
 });
@@ -88,6 +89,7 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
       nhanVatId: null,
       suKienId: null,
       trieuDaiId: null,
+      namXayRa: null,
       thoiGianDoc: 5,
     },
   });
@@ -377,6 +379,28 @@ export function ArticleForm({ initialData, isEdit = false }: ArticleFormProps) {
                     )}
                   />
                 )}
+                
+                <FormField
+                  control={form.control}
+                  name="namXayRa"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Năm xảy ra</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="Nhập năm xảy ra (ví dụ: 1945)" 
+                          value={field.value || ''}
+                          onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : null)} 
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 
                 <FormField
                   control={form.control}

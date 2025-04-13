@@ -1,12 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect, useRef } from 'react';
 import { SiteLayout } from '@/components/layout/site-layout';
-import { Loader2 } from 'lucide-react';
+import { Search, Calendar, Clock, Info, MapPin, Filter, X, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Calendar } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { useMediaQuery } from '@/hooks/use-mobile';
+import { TimelineLoading } from '@/components/ui/timeline-loading';
+import { withPageLoading } from '@/hooks/with-page-loading';
 
 interface TimelineItem {
   id: number;
@@ -17,14 +20,25 @@ interface TimelineItem {
   capital?: string;
 }
 
-export default function TimelinePage() {
+function TimelinePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState<TimelineItem[]>([]);
   const [allItems, setAllItems] = useState<TimelineItem[]>([]);
-  const [visibleRange, setVisibleRange] = useState({ start: -3000, end: 2023 });
+  const [visibleRange, setVisibleRange] = useState<{ start: number; end: number }>({ start: -3000, end: 2025 });
   const [activeFilter, setActiveFilter] = useState('all');
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [nearbyEvents, setNearbyEvents] = useState<TimelineItem[]>([]);
+  const [showYearInfo, setShowYearInfo] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState<TimelineItem | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const timelineRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const scrollToTimeline = () => {
     if (timelineRef.current) {
@@ -36,6 +50,32 @@ export default function TimelinePage() {
 
   const handleFilterChange = (filter: string) => {
     setActiveFilter(filter);
+
+    switch (filter) {
+      case 'prehistoric':
+        setVisibleRange({ start: -3000, end: -258 });
+        break;
+      case 'ancient':
+        setVisibleRange({ start: -258, end: 939 });
+        break;
+      case 'medieval':
+        setVisibleRange({ start: 939, end: 1858 });
+        break;
+      case 'modern':
+        setVisibleRange({ start: 1858, end: 2025 });
+        break;
+      case 'all':
+        if (periods.length > 0) {
+          const earliestYear = Math.min(
+            ...periods.map((period: any) => period.batDau).filter((year: any) => year !== null && year !== undefined)
+          );
+          setVisibleRange({ start: earliestYear, end: 2025 });
+        } else {
+          setVisibleRange({ start: -3000, end: 2025 });
+        }
+        break;
+    }
+
     scrollToTimeline();
   };
 
@@ -63,63 +103,36 @@ export default function TimelinePage() {
 
   useEffect(() => {
     if (periods.length > 0) {
-      const apiItems: TimelineItem[] = periods.map((period: any) => ({
-        id: period.id,
-        name: period.TenTrieuDai,
-        startYear: period.BatDau,
-        endYear: period.KetThuc,
-        description: period.MoTa || 'Không có mô tả',
-        capital: period.kinhDo,
-      })).sort((a: TimelineItem, b: TimelineItem) => a.startYear - b.startYear);
+      console.log('API Dynasty Data:', periods);
+      const apiItems: TimelineItem[] = periods
+        .map((period: any) => ({
+          id: period.id,
+          name: period.tenTrieuDai,
+          startYear: period.batDau,
+          endYear: period.ketThuc,
+          description: period.moTa || 'Không có mô tả',
+          capital: period.kinhDo,
+        }))
+        .sort((a: TimelineItem, b: TimelineItem) => a.startYear - b.startYear);
 
-      const prehistoricPeriods: TimelineItem[] = [
-        {
-          id: -1,
-          name: 'Thời kỳ Văn hóa Sơn Vi',
-          startYear: -20000,
-          endYear: -10000,
-          description: 'Thời kỳ văn hóa sơ khai trên lãnh thổ Việt Nam với những công cụ đá đầu tiên.',
-        },
-        {
-          id: -2,
-          name: 'Thời kỳ Văn hóa Hòa Bình',
-          startYear: -10000,
-          endYear: -8000,
-          description: 'Thời kỳ văn hóa với kỹ thuật ghè đá phức tạp hơn, con người bắt đầu sống định cư.',
-        },
-        {
-          id: -3,
-          name: 'Thời kỳ Văn hóa Bắc Sơn',
-          startYear: -8000,
-          endYear: -6000,
-          description: 'Thời kỳ đá mới với công cụ mài nhẵn và gốm đơn giản.',
-        },
-        {
-          id: -4,
-          name: 'Thời kỳ Văn hóa Phùng Nguyên',
-          startYear: -2000,
-          endYear: -1500,
-          description: 'Thời kỳ chuyển tiếp từ đá sang đồng, con người biết trồng lúa nước.',
-        },
-        {
-          id: -5,
-          name: 'Thời kỳ Văn hóa Đồng Đậu',
-          startYear: -1500,
-          endYear: -1000,
-          description: 'Thời kỳ đồ đồng với kỹ thuật luyện kim phát triển.',
-        },
-        {
-          id: -6,
-          name: 'Thời kỳ Văn Lang - Âu Lạc',
-          startYear: -700,
-          endYear: -258,
-          description: 'Thời kỳ nhà nước Văn Lang dưới sự cai trị của các vua Hùng, sau đó là nhà nước Âu Lạc của An Dương Vương.',
-        },
-      ];
+      if (apiItems.length > 0) {
+        const earliestYear = Math.min(...apiItems.map((item) => item.startYear));
+        setVisibleRange({ start: earliestYear, end: 2025 });
+      }
 
-      const combinedItems = [...prehistoricPeriods, ...apiItems];
-      setAllItems(combinedItems);
-      setFilteredItems(combinedItems);
+      setAllItems(apiItems);
+      setFilteredItems(apiItems);
+    }
+  }, [periods]);
+
+  useEffect(() => {
+    if (periods.length > 0) {
+      const allYears = periods.flatMap((period: any) =>
+        [period.batDau, period.ketThuc].filter((year) => year !== null && year !== undefined)
+      );
+      const minYear = Math.min(...allYears);
+      const maxYear = Math.max(...allYears);
+      setVisibleRange({ start: minYear, end: maxYear });
     }
   }, [periods]);
 
@@ -128,26 +141,27 @@ export default function TimelinePage() {
       let result = [...allItems];
 
       if (searchQuery) {
-        result = result.filter(item =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (item.capital && item.capital.toLowerCase().includes(searchQuery.toLowerCase()))
+        result = result.filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (item.capital && item.capital.toLowerCase().includes(searchQuery.toLowerCase()))
         );
       }
 
       if (activeFilter !== 'all') {
         switch (activeFilter) {
           case 'prehistoric':
-            result = result.filter(item => item.startYear < -258);
+            result = result.filter((item) => item.startYear < -258);
             break;
           case 'ancient':
-            result = result.filter(item => item.startYear >= -258 && item.startYear < 939);
+            result = result.filter((item) => item.startYear >= -258 && item.startYear < 939);
             break;
           case 'medieval':
-            result = result.filter(item => item.startYear >= 939 && item.startYear < 1858);
+            result = result.filter((item) => item.startYear >= 939 && item.startYear < 1858);
             break;
           case 'modern':
-            result = result.filter(item => item.startYear >= 1858);
+            result = result.filter((item) => item.startYear >= 1858);
             break;
         }
       }
@@ -157,14 +171,80 @@ export default function TimelinePage() {
   }, [searchQuery, activeFilter, allItems]);
 
   const calculateTimelinePosition = (year: number) => {
-    const timeSpan = visibleRange.end - visibleRange.start;
-    return Math.max(0, Math.min(100, ((year - visibleRange.start) / timeSpan) * 100));
+    const clampedYear = Math.max(visibleRange.start, Math.min(visibleRange.end, year));
+    const percentage = ((clampedYear - visibleRange.start) / (visibleRange.end - visibleRange.start)) * 100;
+    return Math.max(0, Math.min(100, percentage));
   };
 
   const calculateTimelineWidth = (startYear: number, endYear: number | null) => {
     if (!endYear) return 5;
-    const timeSpan = visibleRange.end - visibleRange.start;
-    return Math.max(5, ((endYear - startYear) / timeSpan) * 100);
+
+    const clampedStartYear = Math.max(visibleRange.start, Math.min(visibleRange.end, startYear));
+    const clampedEndYear = Math.max(visibleRange.start, Math.min(visibleRange.end, endYear));
+
+    const startPosition = calculateTimelinePosition(clampedStartYear);
+    const endPosition = calculateTimelinePosition(clampedEndYear);
+
+    return Math.max(5, endPosition - startPosition);
+  };
+
+  const handleYearClick = (year: number) => {
+    setSelectedYear(year);
+
+    const eventsNearYear = allItems.filter((item) => {
+      if (item.startYear <= year && (item.endYear === null || item.endYear >= year)) {
+        return true;
+      }
+
+      return (
+        Math.abs(item.startYear - year) <= 100 ||
+        (item.endYear !== null && Math.abs(item.endYear - year) <= 100)
+      );
+    });
+
+    setNearbyEvents(eventsNearYear);
+    setShowYearInfo(true);
+
+    if (timelineRef.current) {
+      setTimeout(() => {
+        timelineRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  };
+
+  const closeYearInfo = () => {
+    setShowYearInfo(false);
+    setSelectedYear(null);
+  };
+
+  const handleMouseEnter = (item: TimelineItem, event: React.MouseEvent) => {
+    setTooltipContent(item);
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+    setTooltipContent(null);
+  };
+
+  const handleDotClick = (item: TimelineItem) => {
+    setHoveredItem(hoveredItem === item.id ? null : item.id);
+  };
+
+  const handleCloseItem = () => {
+    setHoveredItem(null);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    if (timelineRef.current) {
+      timelineRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -199,8 +279,10 @@ export default function TimelinePage() {
                   variant={activeFilter === 'prehistoric' ? 'default' : 'outline'}
                   onClick={() => handleFilterChange('prehistoric')}
                   className={cn(
-                    "rounded-full",
-                    activeFilter === 'prehistoric' ? "" : "hover:bg-amber-100 hover:text-amber-700 dark:hover:bg-amber-900/30 dark:hover:text-amber-300"
+                    'rounded-full',
+                    activeFilter === 'prehistoric'
+                      ? ''
+                      : 'hover:bg-amber-100 hover:text-amber-700 dark:hover:bg-amber-900/30 dark:hover:text-amber-300'
                   )}
                 >
                   Thời kỳ tiền sử
@@ -209,8 +291,10 @@ export default function TimelinePage() {
                   variant={activeFilter === 'ancient' ? 'default' : 'outline'}
                   onClick={() => handleFilterChange('ancient')}
                   className={cn(
-                    "rounded-full",
-                    activeFilter === 'ancient' ? "" : "hover:bg-emerald-100 hover:text-emerald-700 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300"
+                    'rounded-full',
+                    activeFilter === 'ancient'
+                      ? ''
+                      : 'hover:bg-emerald-100 hover:text-emerald-700 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300'
                   )}
                 >
                   Thời kỳ cổ đại
@@ -219,8 +303,10 @@ export default function TimelinePage() {
                   variant={activeFilter === 'medieval' ? 'default' : 'outline'}
                   onClick={() => handleFilterChange('medieval')}
                   className={cn(
-                    "rounded-full",
-                    activeFilter === 'medieval' ? "" : "hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300"
+                    'rounded-full',
+                    activeFilter === 'medieval'
+                      ? ''
+                      : 'hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300'
                   )}
                 >
                   Thời kỳ trung đại
@@ -229,8 +315,10 @@ export default function TimelinePage() {
                   variant={activeFilter === 'modern' ? 'default' : 'outline'}
                   onClick={() => handleFilterChange('modern')}
                   className={cn(
-                    "rounded-full",
-                    activeFilter === 'modern' ? "" : "hover:bg-purple-100 hover:text-purple-700 dark:hover:bg-purple-900/30 dark:hover:text-purple-300"
+                    'rounded-full',
+                    activeFilter === 'modern'
+                      ? ''
+                      : 'hover:bg-purple-100 hover:text-purple-700 dark:hover:bg-purple-900/30 dark:hover:text-purple-300'
                   )}
                 >
                   Thời kỳ cận-hiện đại
@@ -251,88 +339,217 @@ export default function TimelinePage() {
 
           <div ref={timelineRef}>
             {isPeriodsLoading ? (
-              <div className="flex flex-col justify-center items-center h-80 bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
-                <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                <span className="text-lg text-gray-600 dark:text-gray-300">Đang tải dòng thời gian...</span>
-              </div>
+              <TimelineLoading />
             ) : (
-              <div className="relative mt-24 mb-12">
-                <div className="w-full h-1.5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-full shadow-sm absolute top-0">
-                  {[-3000, -2000, -1000, 0, 500, 1000, 1500, 1800, 1900, 2000].map(year => (
-                    <div
-                      key={year}
-                      className="absolute -bottom-8 transform -translate-x-1/2"
-                      style={{ left: `${calculateTimelinePosition(year)}%` }}
-                    >
-                      <div className="h-4 w-0.5 bg-gray-400 dark:bg-gray-500 mb-1.5 mx-auto"></div>
-                      <span className="text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 px-2 py-1 rounded-md shadow-sm">{year}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="relative mt-20">
-                  {filteredItems.map((item, index) => (
+              <div className="relative mt-24">
+                <div className="space-y-4">
+                  {currentItems.map((item) => (
                     <motion.div
-                      key={item.id}
-                      className="relative mb-16"
-                      initial={{ opacity: 0, y: 20 }}
+                      key={`item-${item.id}`}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700"
                     >
-                      <div
-                        className={`absolute h-4 w-4 rounded-full bg-gradient-to-r ${getPeriodColor(item.startYear)} -top-[0.68rem] shadow-md z-10 border-2 border-white dark:border-gray-800`}
-                        style={{ left: `${calculateTimelinePosition(item.startYear)}%` }}
-                      ></div>
+                      <div className={`h-1 w-full bg-gradient-to-r ${getPeriodColor(item.startYear)}`}></div>
+                      <div className="p-4">
+                        <div className="flex justify-between items-start">
+                          <h3
+                            className={`font-bold text-lg bg-gradient-to-r ${getPeriodColor(
+                              item.startYear
+                            )} bg-clip-text text-transparent`}
+                          >
+                            {item.name}
+                          </h3>
+                          <Badge variant="outline" className="ml-2 shrink-0">
+                            {formatYear(item.startYear)} - {item.endYear ? formatYear(item.endYear) : 'nay'}
+                          </Badge>
+                        </div>
 
-                      <div
-                        className={`absolute h-3 bg-gradient-to-r ${getPeriodColor(item.startYear)} opacity-70 rounded-full -top-[0.55rem] shadow-inner`}
-                        style={{
-                          left: `${calculateTimelinePosition(item.startYear)}%`,
-                          width: `${calculateTimelineWidth(item.startYear, item.endYear || 2023)}%`
-                        }}
-                      ></div>
-
-                      <div
-                        className={`bg-white dark:bg-gray-800 rounded-xl p-6 transition-all hover:shadow-lg border border-gray-100 dark:border-gray-700 ${
-                          index % 2 === 0 ? 'shadow-md' : 'shadow-md'
-                        }`}
-                        style={{
-                          marginLeft: `${calculateTimelinePosition(item.startYear)}%`,
-                          maxWidth: '600px',
-                          transform: index % 2 === 0 ? 'translateY(0)' : 'translateY(-100%)',
-                        }}
-                      >
-                        <div className="flex flex-col">
-                          <div className="flex justify-between items-center mb-2">
-                            <h3 className={`font-bold text-xl bg-gradient-to-r ${getPeriodColor(item.startYear)} bg-clip-text text-transparent`}>
-                              {item.name}
-                            </h3>
-                            <span className="text-sm font-medium bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
-                              {formatYear(item.startYear)} - {item.endYear ? formatYear(item.endYear) : 'nay'}
-                            </span>
+                        {item.capital && (
+                          <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-2 flex items-center">
+                            <MapPin className="h-3 w-3 mr-1" />
+                            <span>{item.capital}</span>
                           </div>
+                        )}
 
-                          {item.capital && (
-                            <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                              <span className="font-medium">Kinh đô:</span> {item.capital}
-                            </div>
-                          )}
+                        <div className="mt-2">
+                          <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">{item.description}</p>
+                        </div>
 
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                            {item.description}
-                          </p>
+                        <div className="mt-3 pt-2 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                          <Badge
+                            className={`bg-opacity-10 text-xs ${
+                              item.startYear < -258
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
+                                : item.startYear < 939
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300'
+                                : item.startYear < 1858
+                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                                : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+                            }`}
+                          >
+                            {item.startYear < -258
+                              ? 'Tiền sử'
+                              : item.startYear < 939
+                              ? 'Cổ đại'
+                              : item.startYear < 1858
+                              ? 'Trung đại'
+                              : 'Cận-hiện đại'}
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-primary hover:text-primary/90 p-0 h-8"
+                            onClick={() => (window.location.href = `/dynasty/${item.id}`)}
+                          >
+                            <span className="text-xs">Xem chi tiết</span>
+                            <ArrowRight className="ml-1 h-3 w-3" />
+                          </Button>
                         </div>
                       </div>
                     </motion.div>
                   ))}
+
+                  {totalPages > 1 && (
+                    <div className="flex justify-center items-center mt-6 gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => paginate(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        className="h-8 w-8 p-0 rounded-full"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+
+                      <span className="text-sm text-gray-500 dark:text-gray-400 mx-1">
+                        Trang {currentPage} / {totalPages}
+                      </span>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        className="h-8 w-8 p-0 rounded-full"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
+            {showYearInfo && selectedYear !== null && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={cn(
+                  'bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 mt-16 mb-8 relative overflow-hidden',
+                  isMobile && 'sticky top-4 z-30'
+                )}
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/80 to-primary/20"></div>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center">
+                    <Calendar className="h-5 w-5 text-primary mr-2" />
+                    <h3 className="text-xl font-bold">
+                      Sự kiện năm {selectedYear < 0 ? `${Math.abs(selectedYear)} TCN` : selectedYear}
+                    </h3>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={closeYearInfo}
+                    className="h-8 w-8 p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {nearbyEvents.length > 0 ? (
+                  <div
+                    className={cn(
+                      'grid gap-4',
+                      isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'
+                    )}
+                  >
+                    {nearbyEvents.map((event) => (
+                      <motion.div
+                        key={event.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={cn(
+                          'relative p-4 border border-gray-200 dark:border-gray-700 rounded-lg',
+                          'hover:shadow-md transition-all duration-300 overflow-hidden',
+                          'bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-850'
+                        )}
+                      >
+                        <div
+                          className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${getPeriodColor(
+                            event.startYear
+                          )}`}
+                        ></div>
+                        <div className="ml-2">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4
+                              className={`font-bold text-lg bg-gradient-to-r ${getPeriodColor(
+                                event.startYear
+                              )} bg-clip-text text-transparent`}
+                            >
+                              {event.name}
+                            </h4>
+                            <Badge variant="outline" className="ml-2 shrink-0">
+                              ({formatYear(event.startYear)} - {event.endYear ? formatYear(event.endYear) : 'nay'})
+                            </Badge>
+                          </div>
+
+                          {event.capital && (
+                            <div className="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center">
+                              <MapPin className="h-3 w-3 mr-1" />
+                              <span>{event.capital}</span>
+                            </div>
+                          )}
+
+                          <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                            {event.description}
+                          </p>
+
+                          <div className="mt-3 text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="rounded-full bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-primary/30 text-primary"
+                              onClick={() => (window.location.href = `/dynasty/${event.id}`)}
+                            >
+                              Xem chi tiết
+                              <ArrowRight className="ml-1 h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 dark:bg-gray-750 rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
+                    <Info className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                    <p className="text-gray-500 dark:text-gray-400">Không tìm thấy sự kiện nào gần với năm này</p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
             {filteredItems.length === 0 && !isPeriodsLoading && (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-10 text-center">
-                <h3 className="text-xl font-medium mb-3 text-gray-800 dark:text-gray-200">Không tìm thấy thời kỳ nào phù hợp</h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-6">Vui lòng thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc.</p>
+                <h3 className="text-xl font-medium mb-3 text-gray-800 dark:text-gray-200">
+                  Không tìm thấy thời kỳ nào phù hợp
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
+                  Vui lòng thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc.
+                </p>
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -370,8 +587,25 @@ export default function TimelinePage() {
               </div>
             </div>
           )}
+
+          {totalPages > 1 && (
+            <div className="mt-8 flex justify-center items-center space-x-2">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  variant={currentPage === index + 1 ? 'default' : 'outline'}
+                  onClick={() => paginate(index + 1)}
+                  className="rounded-full"
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </SiteLayout>
   );
 }
+
+export default withPageLoading(TimelinePage);

@@ -5,6 +5,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
+import { useState, useEffect } from "react";
+
+// Import the timeline loading component
+import { TimelineLoading } from "@/components/ui/timeline-loading";
 
 // Pages
 import HomePage from "@/pages/home-page";
@@ -25,8 +29,10 @@ import AdminHistoricalFigureEdit from "@/pages/admin/admin-historical-figure-edi
 import AdminHistoricalEventEdit from "@/pages/admin/admin-historical-event-edit";
 import NotFound from "@/pages/not-found";
 
-// Import the new timeline page
+// Import the timeline page
 import TimelinePage from "@/pages/timeline-page";
+// Import the loading demo page
+import LoadingDemoPage from "@/pages/loading-demo-page";
 
 function Router() {
   return (
@@ -36,6 +42,7 @@ function Router() {
       <Route path="/category/:category" component={CategoryPage} />
       <Route path="/search" component={SearchPage} />
       <Route path="/timeline" component={TimelinePage} />
+      <Route path="/loading-demo" component={LoadingDemoPage} />
       <Route path="/auth" component={AuthPage} />
       
       {/* Protected Admin Routes */}
@@ -62,12 +69,31 @@ function Router() {
 }
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Mô phỏng quá trình tải ứng dụng
+    const loadApp = async () => {
+      // Hiển thị loading trong ít nhất 2 giây để người dùng có thể thấy animation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setIsLoading(false);
+    };
+
+    loadApp();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
-          <Router />
-          <Toaster />
+          {isLoading ? (
+            <TimelineLoading fullScreen={true} />
+          ) : (
+            <>
+              <Router />
+              <Toaster />
+            </>
+          )}
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>

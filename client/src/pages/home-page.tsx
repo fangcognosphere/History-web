@@ -6,8 +6,9 @@ import { TimelineSection } from '@/components/home/timeline-section';
 import { MediaGallery } from '@/components/home/media-gallery';
 import { RecentArticles } from '@/components/home/recent-articles';
 import { NewsletterSignup } from '@/components/home/newsletter-signup';
+import { withPageLoading } from '@/hooks/with-page-loading';
 
-export default function HomePage() {
+function HomePage() {
   return (
     <SiteLayout>
       <HeroSection />
@@ -20,3 +21,5 @@ export default function HomePage() {
     </SiteLayout>
   );
 }
+
+export default withPageLoading(HomePage);

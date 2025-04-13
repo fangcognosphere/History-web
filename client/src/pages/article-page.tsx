@@ -2,8 +2,9 @@ import { SiteLayout } from '@/components/layout/site-layout';
 import { ArticleDetail } from '@/components/articles/article-detail';
 import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
+import { withPageLoading } from '@/hooks/with-page-loading';
 
-export default function ArticlePage() {
+function ArticlePage() {
   const { id } = useParams();
   
   // Fetch article to get title for SEO
@@ -23,10 +24,12 @@ export default function ArticlePage() {
 
   return (
     <SiteLayout 
-      title={article?.tieuDe}
-      description={article?.tomTat}
+      title={article?.tieuDe || 'Đang tải bài viết...'}
+      description={article?.tomTat || ''}
     >
-      <ArticleDetail id={id} />
+      <ArticleDetail id={id || ''} />
     </SiteLayout>
   );
 }
+
+export default withPageLoading(ArticlePage);

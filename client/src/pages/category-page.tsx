@@ -4,8 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { SiteLayout } from '@/components/layout/site-layout';
 import { ArticleGrid } from '@/components/articles/article-grid';
 import { Button } from '@/components/ui/button';
+import { withPageLoading } from '@/hooks/with-page-loading';
 
-export default function CategoryPage() {
+function CategoryPage() {
   const { category } = useParams();
   const [page, setPage] = useState(1);
   const pageSize = 9;
@@ -72,3 +73,5 @@ export default function CategoryPage() {
     </SiteLayout>
   );
 }
+
+export default withPageLoading(CategoryPage);

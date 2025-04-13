@@ -85,7 +85,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/article", upload.single("anhDaiDien"), async (req, res) => {
     try {
-      const { tieuDe, noiDung, tomTat, danhMuc, noiBat, nhanVatId, suKienId, trieuDaiId, thoiGianDoc } = req.body;
+      const { tieuDe, noiDung, tomTat, danhMuc, noiBat, nhanVatId, suKienId, trieuDaiId, thoiGianDoc, namXayRa } = req.body;
       const taiKhoanId = req.user?.id;
 
       let anhDaiDien = null;
@@ -110,7 +110,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         nhanVatId: nhanVatId ? parseInt(nhanVatId) : null,
         suKienId: suKienId ? parseInt(suKienId) : null,
         trieuDaiId: trieuDaiId ? parseInt(trieuDaiId) : null,
-        thoiGianDoc: thoiGianDoc ? parseInt(thoiGianDoc) : 5
+        thoiGianDoc: thoiGianDoc ? parseInt(thoiGianDoc) : 5,
+        namXayRa: namXayRa ? parseInt(namXayRa) : null
       });
       
       res.status(201).json(newArticle);
@@ -123,7 +124,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/article/:id", upload.single("anhDaiDien"), async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { tieuDe, noiDung, tomTat, danhMuc, noiBat, nhanVatId, suKienId, trieuDaiId, thoiGianDoc } = req.body;
+      const { tieuDe, noiDung, tomTat, danhMuc, noiBat, nhanVatId, suKienId, trieuDaiId, thoiGianDoc, namXayRa } = req.body;
       
       const article = await storage.getBaiViet(id);
       if (!article) {
@@ -156,7 +157,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         nhanVatId: nhanVatId ? parseInt(nhanVatId) : null,
         suKienId: suKienId ? parseInt(suKienId) : null,
         trieuDaiId: trieuDaiId ? parseInt(trieuDaiId) : null,
-        thoiGianDoc: thoiGianDoc ? parseInt(thoiGianDoc) : 5
+        thoiGianDoc: thoiGianDoc ? parseInt(thoiGianDoc) : 5,
+        namXayRa: namXayRa ? parseInt(namXayRa) : null
       });
       
       res.json(updatedArticle);
@@ -377,7 +379,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get historical dynasties
   app.get("/api/dynasty", async (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
       const dynasties = await storage.getTrieuDais(limit, offset);
       res.json(dynasties);
@@ -386,10 +388,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get single dynasty by id
+  app.get("/api/dynasty/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const dynasty = await storage.getTrieuDai(id);
+      if (!dynasty) {
+        return res.status(404).json({ error: "Dynasty not found" });
+      }
+      res.json(dynasty);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch dynasty" });
+    }
+  });
+
+  // Create dynasty
+  app.post("/api/dynasty", async (req, res) => {
+    try {
+      const dynasty = await storage.createTrieuDai(req.body);
+      res.status(201).json(dynasty);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create dynasty" });
+    }
+  });
+
+  // Update dynasty
+  app.patch("/api/dynasty/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const dynasty = await storage.updateTrieuDai(id, req.body);
+      if (!dynasty) {
+        return res.status(404).json({ error: "Dynasty not found" });
+      }
+      res.json(dynasty);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update dynasty" });
+    }
+  });
+
+  // Delete dynasty
+  app.delete("/api/dynasty/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const dynasty = await storage.getTrieuDai(id);
+      
+      if (!dynasty) {
+        return res.status(404).json({ error: "Dynasty not found" });
+      }
+      
+      await storage.deleteTrieuDai(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete dynasty" });
+    }
+  });
+
   // Get historical figures
   app.get("/api/figure", async (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
       const figures = await storage.getNhanVats(limit, offset);
       res.json(figures);
@@ -452,7 +509,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get historical events
   app.get("/api/event", async (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.limit as string) || 20;
       const offset = parseInt(req.query.offset as string) || 0;
       const events = await storage.getSuKiens(limit, offset);
       res.json(events);

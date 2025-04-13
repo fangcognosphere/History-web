@@ -141,6 +141,12 @@ export function ArticleDetail({ id }: ArticleDetailProps) {
                 <Calendar className="h-4 w-4 mr-1" />
                 <time dateTime={article.ngayDang}>{formatDate(article.ngayDang)}</time>
               </div>
+              {article.namXayRa && (
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-1" />
+                  <span>Năm xảy ra: {article.namXayRa}</span>
+                </div>
+              )}
               <div className="flex items-center">
                 <Clock className="h-4 w-4 mr-1" />
                 <span>{article.thoiGianDoc || 5} phút đọc</span>

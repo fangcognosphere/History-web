@@ -42,3 +42,9 @@ replit.nix
 # Local uploads
 uploads/
 uploads/*
+
+# Neon folder
+/neon-server
+
+# migrations folder 
+/migrations

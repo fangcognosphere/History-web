@@ -6,13 +6,14 @@ import { DynastyForm } from '@/components/admin/dynasty-form';
 import { AdminLayout } from '@/components/layout/admin-layout';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
+import { TrieuDai } from '@shared/schema';
 
 export default function AdminDynastyEdit() {
   const params = useParams();
   const isEdit = Boolean(params.id);
   const id = params.id ? parseInt(params.id) : null;
 
-  const { data: dynasty, isLoading, error } = useQuery({
+  const { data: dynasty, isLoading, error } = useQuery<TrieuDai>({
     queryKey: [`/api/dynasty/${id}`],
     queryFn: getQueryFn({ on401: "throw" }),
     enabled: isEdit && !!id,

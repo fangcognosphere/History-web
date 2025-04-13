@@ -3,6 +3,16 @@ import App from "./App";
 import "./index.css";
 import "./lib/theme-colors.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+// Khởi tạo AOS
+AOS.init({
+  duration: 800,
+  easing: 'ease-in-out',
+  once: true,
+  mirror: false
+});
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
